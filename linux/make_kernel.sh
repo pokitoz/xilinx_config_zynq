@@ -40,7 +40,7 @@ fi
 pushd linux-xlnx
 
 echo -e "\e[34m Cleaning.. \e[39m"
-make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- distclean
+#make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- distclean
 echo -e "\e[34m Compiling linux kernel with zturn configuration \e[39m"
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- zynq_zturn_defconfig
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- uImage
