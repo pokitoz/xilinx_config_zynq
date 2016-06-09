@@ -43,9 +43,26 @@ $linux_dir_r/make_uboot.sh
 $dev_dir_r/make_dtb.sh $abs_path_hdf
 $dev_dir_r/make_fsbl.sh $abs_path_hdf
 $build_dir_r/make_bootbin.sh `basename "$abs_path_hdf" .hdf`
+
+
+pushd $applications_dir_r
+	for d in * ; do
+
+	    if [ -d $d ]; then
+			pushd $d/
+				echo -e "\e[34m Compiling $d \e[39m"
+				./"make_$d.sh"		
+			popd
+		fi
+	done	
+popd
+
+
+
 ./copy_to_sd_card.sh $sdcard_abs
 
 
+	
 
 
 trap : 0

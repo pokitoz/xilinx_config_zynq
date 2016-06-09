@@ -66,6 +66,7 @@ pushd "dtb_$basename_hdf"
 	echo -e "\e[34m Generate the DTB in `pwd`/dts.. \e[39m" 
 	pushd "dts"
 		dtc -I dts -O dtb -o devicetree.dtb system.dts
+		dtc -I dtb -O dts -o out_system.dts devicetree.dtb 
 	popd
 
 popd

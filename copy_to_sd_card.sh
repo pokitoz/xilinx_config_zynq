@@ -48,7 +48,7 @@ if [ "$(echo "${sdcard_abs}" | grep -P "/dev/sd\w$")" ]; then
 		sdcard_dev_ext3_id="p2"
 		sdcard_preloader_partition_number="p3"
 	else
-		echo "You entered a partition. Please enter only the name of the sdcard.. "
+		echo -e "\e[91mYou entered a partition. Please enter only the name of the sdcard..\e[39m"
 		exit 1
 fi
 
@@ -64,7 +64,17 @@ set -e
     sudo mkdir -p "$media_ext4"
     sudo mount -t ext4 "${sdcard_abs}$sdcard_dev_ext3_id" "$media_ext4"
 	#Copy files in rootfs
-#	sudo cp "./$drivers_dir/blink.out" "$media_ext4/root/Desktop/"
+#	
+
+
+	pushd $applications_dir_r
+		for d in * ; do
+		    if [ -d $d ]; then
+				echo -e "\e[34m Copying $d to .. \e[39m"
+				sudo cp -r "./$d" "$media_ext4/root/Desktop/"
+			fi
+		done	
+	popd
 
 	sudo sync
 
@@ -80,6 +90,7 @@ set -e
 	sudo cp "$build_dir_r/BOOT.bin" "$media_fat/"
 	sudo cp "$build_dir_r/uEnv.txt" "$media_fat/"
 	sudo cp "$build_dir_r/7z020.bit" "$media_fat"
+
 
 
 	ls -l "$media_fat/"

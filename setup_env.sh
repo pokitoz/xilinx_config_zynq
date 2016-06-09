@@ -29,5 +29,5 @@ export dev_dir_r="$PWD/$dev_dir"
 export linux_dir_r="$PWD/$linux_dir"
 
 export projects_dir_r="$PWD/$projects_dir"
-export application_dir_r="$PWD/$applications_dir"
+export applications_dir_r="$dev_dir_r/$applications_dir"
  
