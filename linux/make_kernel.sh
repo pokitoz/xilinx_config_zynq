@@ -28,6 +28,8 @@ abort() {
 trap 'abort' 0
 
 
+echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+
 if [ ! -d "linux-xlnx" ]; then
 	echo `pwd`
 	echo -e "\e[91m Please extract the archive. linux-xlnx folder not found\e[39m"
