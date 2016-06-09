@@ -36,3 +36,18 @@
 *.tar
 *.bz2
 *.gz
+
+# Build directory
+build/*
+!build/make_bootbin.sh
+
+# Dev directory
+dev/*
+!dev/*.sh
+
+# Linux directory
+linux/*
+!linux/*.sh
+
+# Tools directory
+tools/*
