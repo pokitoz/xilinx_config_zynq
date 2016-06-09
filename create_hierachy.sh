@@ -50,6 +50,7 @@ popd
 
 pushd $dev_dir_r
 	mkdir -p ./projects
+	mkdir -p ./applications
 popd
 
 

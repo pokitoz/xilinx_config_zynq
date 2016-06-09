@@ -15,7 +15,8 @@ source /opt/Xilinx/SDK/2016.1/settings64.sh
 
 export setup_env="1"
 
-
+export projects_dir="projects"
+export applications_dir="applications"
 export tools_dir="tools"
 
 export dev_dir="dev"
@@ -27,6 +28,6 @@ export build_dir_r="$PWD/$build_dir"
 export dev_dir_r="$PWD/$dev_dir"
 export linux_dir_r="$PWD/$linux_dir"
 
-
-export 
-
+export projects_dir_r="$PWD/$projects_dir"
+export application_dir_r="$PWD/$applications_dir"
+ 
