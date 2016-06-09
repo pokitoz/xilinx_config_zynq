@@ -25,6 +25,13 @@ trap 'abort' 0
 echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
 #Copy files to sd card
 
+if [ -z "$1" ]; then
+	echo -e "\e[91m You need to specify a HDF location\e[39m"
+	exit 1
+fi
+
+
+
 hdf_location="$1"
 sdcard_abs="$2"
 
