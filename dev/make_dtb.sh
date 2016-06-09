@@ -27,6 +27,7 @@ trap 'abort' 0
 
 
 
+echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
 
 if [ ! -d "dtc" ]; then
 	echo -e "\e[34m Cloning from git the dtc repository.. \e[39m" 

@@ -27,6 +27,8 @@ abort() {
 
 trap 'abort' 0
 
+
+echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
 echo -e "\e[34m Create boot.bif for BOOT.bin.. \e[39m"
 
 cat <<EOF > ./boot.bif

@@ -3,6 +3,8 @@
 #please specify the SD card location.
 #It will paritionate the SDcard to have 2 parts.
 
+echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+
 sdcard_abs="$1"
 
 

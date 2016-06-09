@@ -25,6 +25,9 @@ abort() {
 trap 'abort' 0
 
 
+echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+
+
 hdf_path="$1"
 basename_hdf=`basename $1 .hdf`
 dir_for_new_app="fsbl_$basename_hdf"

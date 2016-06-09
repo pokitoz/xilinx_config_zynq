@@ -21,7 +21,12 @@ export tools_dir="tools"
 export dev_dir="dev"
 export linux_dir="linux"
 export build_dir="build"
+
+export tools_dir_r="$PWD/$tools_dir"
 export build_dir_r="$PWD/$build_dir"
 export dev_dir_r="$PWD/$dev_dir"
 export linux_dir_r="$PWD/$linux_dir"
+
+
+export 
 
