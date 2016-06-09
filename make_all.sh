@@ -30,12 +30,12 @@ sdcard_abs="$2"
 
 
 abs_path_hdf=`readlink -f $hdf_location`
- 
-#$linux_dir_r/make_kernel.sh
+
+$linux_dir_r/make_kernel.sh
 $linux_dir_r/make_uboot.sh
 $dev_dir_r/make_dtb.sh $abs_path_hdf
 $dev_dir_r/make_fsbl.sh $abs_path_hdf
-$build_dir_r/make_bootbin.sh `basename "$abs_path_hdf" .hdf` 
+$build_dir_r/make_bootbin.sh `basename "$abs_path_hdf" .hdf`
 ./copy_to_sd_card.sh $sdcard_abs
 
 
