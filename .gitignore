@@ -46,6 +46,7 @@ build/*
 dev/*
 !dev/*.sh
 !dev/projects/*/linux.sdk/*.hdf
+!dev/applications/
 
 
 # Linux directory
