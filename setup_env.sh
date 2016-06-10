@@ -10,7 +10,7 @@ echo $PATH
 export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
 export ARCH=arm
 
-source /opt/Xilinx/SDK/2016.1/settings64.sh
+source /opt/Xilinx/SDK/2016.2/settings64.sh
 
 
 export setup_env="1"
@@ -30,4 +30,3 @@ export linux_dir_r="$PWD/$linux_dir"
 
 export projects_dir_r="$PWD/$projects_dir"
 export applications_dir_r="$dev_dir_r/$applications_dir"
- 
