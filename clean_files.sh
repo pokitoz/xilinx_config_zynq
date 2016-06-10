@@ -16,7 +16,7 @@ cd "${script_dir_abs}"
 # Functions definitions ########################################################
 
 abort() {
-	echo -e "\e[91m Error in `basename "$0"`\e[39m"
+	echo -e "\e[91m Error in  `basename "$0"`\e[39m"
     exit 1
 }
 

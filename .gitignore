@@ -59,3 +59,4 @@ tools/*
 # Log Files
 *.log
 *.jou
+*.str

@@ -26,6 +26,9 @@ trap 'abort' 0
 
 echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
 
+
+sudo apt-get install tree
+
 mkdir -p $linux_dir_r
 mkdir -p $tools_dir_r
 
