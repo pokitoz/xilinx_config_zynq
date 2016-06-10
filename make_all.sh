@@ -51,11 +51,13 @@ pushd $applications_dir_r
 
 	    if [ -d $d ]; then
 			pushd $d/
-				echo -e "\e[34m Compiling $d \e[39m"
-				./"make_$d.sh"		
+				if [ -f "make_$d.sh" ]; then
+					echo -e "\e[34m Compiling $d \e[39m"
+					./"make_$d.sh"
+				fi
 			popd
 		fi
-	done	
+	done
 popd
 
 
@@ -63,7 +65,7 @@ popd
 ./copy_to_sd_card.sh $sdcard_abs
 
 
-	
+
 
 
 trap : 0
