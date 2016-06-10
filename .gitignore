@@ -27,6 +27,7 @@
 *.i*86
 *.x86_64
 *.hex
+*.elf
 
 # Debug files
 *.dSYM/
@@ -53,3 +54,7 @@ linux/*
 
 # Tools directory
 tools/*
+
+# Log Files
+*.log
+*.jou
