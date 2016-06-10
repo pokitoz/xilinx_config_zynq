@@ -35,6 +35,7 @@ fi
 hdf_location="$1"
 sdcard_abs="$2"
 
+./clean_files.sh
 
 abs_path_hdf=`readlink -f $hdf_location`
 
