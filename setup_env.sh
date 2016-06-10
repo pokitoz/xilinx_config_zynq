@@ -20,6 +20,7 @@ echo $PATH
 export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
 export ARCH=arm
 
+
 echo -e "\e[34m Sourcing /opt/Xilinx/SDK/2016.2/settings64.sh.. \e[39m" 
 source /opt/Xilinx/SDK/2016.2/settings64.sh
 
@@ -43,9 +44,8 @@ export linux_dir_r="$PWD/$linux_dir"
 
 export projects_dir_r="$PWD/$projects_dir"
 export applications_dir_r="$dev_dir_r/$applications_dir"
- 
 
-echo -e "\e[34m Sourcing /opt/Xilinx/SDK/2016.1/settings64.sh.. \e[39m" 
+ 
 
 
 trap : 0
