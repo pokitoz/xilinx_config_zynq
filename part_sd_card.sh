@@ -7,6 +7,7 @@ echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
 
 sdcard_abs="$1"
 
+echo -e "\e[34m Print last dmesg lines \e[39m"
 dmesg_var=`dmesg | tail -n 3`
 dmesg_var_grep=`echo $dmesg_var | grep "new high speed SD card"`
 
@@ -42,12 +43,15 @@ if [ "$(echo "${sdcard_abs}" | grep -P "/dev/sd\w$")" ]; then
 fi
 
 
+echo -e "\e[34m The fdisk utility does not erase the first few bytes of the first sector in the card\e[39m"
+echo -e "\e[34m dd is used to erase the first sector.\e[39m"
+
 #The fdisk utility does not erase the first few bytes of the first sector in the card
 #dd is used to erase the first sector.
 sudo dd if=/dev/zero of=${sdcard_abs} bs=1024 count=1
 
 size_sd_byte=`sudo fdisk -l ${sdcard_abs} | head -n 2`
-echo "Size sd card "$size_sd_byte
+echo -e "\e[34m Size sd card:  $size_sd_byte bytes\e[39m"
 
 arrIN=(${size_sd_byte// / })
 size_sd_card=${arrIN[4]}
@@ -79,6 +83,12 @@ echo $new_cylinders
 heads=255
 sectors=63
 lastsector="+200M"
+
+echo -e "\e[34m Use fdisk to part the SD card.\e[39m"
+echo -e "\e[34m Create two partitions on the SD card.\e[39m"
+echo -e "\e[34m One 200 MB sized boot partition. \e[39m"
+echo -e "\e[34m Second partition taking the remaining space on the SD card.\e[39m"
+
 echo -e "x\nh\n$heads\ns\n$sector\nc\n$new_cylinders\nr\nn\np\n1\n\n$lastsector\nn\np\n2\n\n\na\n1\nt\n1\nc\nt\n2\n83\np\nw\n" | sudo fdisk "${sdcard_abs}"
 
 
@@ -88,7 +98,6 @@ sudo mkfs.ext4 -L root ${sdcard_abs}$sdcard_dev_ext3_id
 
 sudo mkdir -p /mnt/boot
 sudo mount ${sdcard_abs}$sdcard_fat32_partition_number /mnt/boot
-
 
 sudo umount ${sdcard_abs}$sdcard_fat32_partition_number
 sudo umount ${sdcard_abs}$sdcard_dev_ext3_id
@@ -100,16 +109,15 @@ sudo sync
 
 
 if [ "$2" -eq "1" ]; then
-
-	chmod +x ./sd_write_image.sh
+	echo -e "\e[34m Call ./sd_write_image.sh \e[39m"
 	./sd_write_image.sh ${sdcard_abs}
 
 fi
 
 
 
-echo ""
-echo "You may need to plug/unplug the SD card to see the partitions."
-echo ""
+echo -e "\e[34m \e[39m"
+echo -e "\e[34m You may need to plug/unplug the SD card to see the partitions. \e[39m"
+echo -e "\e[34m \e[39m"
 
 

@@ -70,7 +70,7 @@ set -e
 	pushd $applications_dir_r
 		for d in * ; do
 		    if [ -d $d ]; then
-				echo -e "\e[34m Copying $d to .. \e[39m"
+				echo -e "\e[34m Copying $d to "$media_ext4/root/Desktop/" \e[39m"
 				sudo cp -r "./$d" "$media_ext4/root/Desktop/"
 			fi
 		done	

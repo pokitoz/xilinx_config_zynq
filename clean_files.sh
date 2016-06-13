@@ -25,8 +25,7 @@ trap 'abort' 0
 echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
 #Copy files to sd card
 
-
-
+echo -e "\e[34m Clean $build_dir_r \e[39m"
 pushd $build_dir_r
 rm -f ./*.bit
 rm -f ./*.bif
@@ -38,6 +37,7 @@ rm -f ./uImage
 rm -f ./*.dtb	
 popd
 
+echo -e "\e[34m Clean $dev_dir_r \e[39m"
 pushd $dev_dir_r
 
 popd

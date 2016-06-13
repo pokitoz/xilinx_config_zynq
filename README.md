@@ -21,31 +21,6 @@ Run *./create_hierarchy.sh*
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Will become a heading
-==============
-
-Will become a sub heading
---------------
-
-*This will be Italic*
-
-**This will be Bold**
-
-- This will be a list item
-- This will be a list item
-
-    Add a indent and this will end up as code
+Kernel:
+https://github.com/Digilent/linux-Digilent-Dev
+https://github.com/Xilinx/linux-xlnx.git

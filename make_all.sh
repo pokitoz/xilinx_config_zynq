@@ -56,8 +56,6 @@ pushd $applications_dir_r
 
 				mkdir -p "includes"
 				cp -f "$dev_dir_r/fsbl_$hdf_name_only/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/* ./includes
-				cp -f "$dev_dir_r/fsbl_$hdf_name_only/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/* ./includes
-
 
 				if [ -f "make_$d.sh" ]; then
 					echo -e "\e[34m Compiling $d \e[39m"
@@ -73,6 +71,8 @@ popd
 
 
 
+echo -e "\e[34m Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)\e[39m"
+echo -e "\e[34m Use minicom or miniterm.py\e[39m"
 
 
 trap : 0

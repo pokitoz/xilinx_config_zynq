@@ -1,12 +1,11 @@
 #!/bin/bash
 
 #please specify the SD card location.
-#It will paritionate the SDcard to have 2 parts.
 
 echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
 
 sdcard_abs="$1"
-
+echo -e "\e[34m SD Card: $1 \e[39m"
 
 if [ ! -b "${sdcard_abs}" ]; then
         
@@ -36,14 +35,20 @@ if [ "$(echo "${sdcard_abs}" | grep -P "/dev/sd\w$")" ]; then
 fi
 
 
-
+echo -e "\e[34m Unmount everything related to the SD card\e[39m"
 sudo umount ${sdcard_abs}
 sudo umount ${sdcard_abs}$sdcard_fat32_partition_number
 sudo umount ${sdcard_abs}$sdcard_dev_ext3_id
 
+echo -e "\e[34m Install pv to have an estimation time \e[39m"
 sudo apt-get install pv
 
+echo -e "\e[34m Gunzip the xillinux image \e[39m"
 gunzip ./filesystem/xillinux-1.3.img.gz
+echo -e "\e[34m Copy the image to the SD card (might take a while) \e[39m"
 sudo dd if="./filesystem/xillinux-1.3.img" bs=4M of=${sdcard_abs} | pv | dd of=/dev/null
 rm -rf ./filesystem/xillinux-1.3.img
 sync
+
+echo -e "\e[92m *** DONE `basename "$0"` *** \e[39m"
+

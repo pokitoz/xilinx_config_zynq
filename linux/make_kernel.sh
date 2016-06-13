@@ -14,8 +14,12 @@ cd "${script_dir_abs}"
 pushd $linux_dir_r
 
 
-
-
+if [ -z $1 ]; then
+	echo -e "\e[34m Nothing specified, using $env_def_config_kernel.. \e[39m"
+	defconfig_kernel=$env_def_config_kernel
+else
+	defconfig_kernel=$1
+fi
 
 
 # Functions definitions ########################################################
@@ -37,13 +41,16 @@ if [ ! -d "linux-xlnx" ]; then
 fi
 
 
-pushd linux-xlnx
+pushd $kernel_dir_r
 
 echo -e "\e[34m Cleaning.. \e[39m"
+
+cp $preset_dir_r/zynq_zturn_defconfig ./arch/arm/configs/
+
 #make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- distclean
-echo -e "\e[34m Compiling linux kernel with zturn configuration \e[39m"
-make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- zynq_zturn_defconfig
-make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- uImage
+echo -e "\e[34m Compiling linux kernel with $defconfig_kernel configuration \e[39m"
+make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- $defconfig_kernel
+make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- UIMAGE_LOADADDR=0x8000 uImage
 
 echo -e "\e[34m Generate all the Device tree Binary files \e[39m"
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- dtbs
@@ -53,8 +60,8 @@ ls -l ./arch/arm/boot/uImage
 cp ./arch/arm/boot/uImage ../../build/uImage
 
 echo -e "\e[34m Copy the standard dtb to $build_dir_r\e[39m"
-ls -l ./arch/arm/boot/dts/zynq-zturn.dtb
-cp ./arch/arm/boot/dts/zynq-zturn.dtb "$build_dir_r"
+#ls -l ./arch/arm/boot/dts/zynq-zturn.dtb
+#cp ./arch/arm/boot/dts/zynq-zturn.dtb "$build_dir_r"
 
 popd
 

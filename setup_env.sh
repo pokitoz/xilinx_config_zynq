@@ -31,9 +31,14 @@ export projects_dir="projects"
 export applications_dir="applications"
 export tools_dir="tools"
 
+export kernel_dir="linux-xlnx"
+
 export dev_dir="dev"
 export linux_dir="linux"
 export build_dir="build"
+export preset_dir="preset"
+
+
 
 echo -e "\e[34m Find absolute directory paths.. \e[39m" 
 
@@ -41,11 +46,26 @@ export tools_dir_r="$PWD/$tools_dir"
 export build_dir_r="$PWD/$build_dir"
 export dev_dir_r="$PWD/$dev_dir"
 export linux_dir_r="$PWD/$linux_dir"
+export kernel_dir_r="$linux_dir_r/$kernel_dir"
+
 
 export projects_dir_r="$PWD/$projects_dir"
 export applications_dir_r="$dev_dir_r/$applications_dir"
+export preset_dir_r="$PWD/$preset_dir"
 
- 
+
+export env_def_config_kernel="zynq_zturn_defconfig"
+export env_def_config_kernel="xilinx_zynq_defconfig"
+
+
+#RED
+export c_error="\e[91m"
+#GREEN
+export c_good="\e[92m"
+#BLUE
+export c_info="\e[34m"
+#default: white
+export c_default="\e[39m"
 
 
 trap : 0
