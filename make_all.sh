@@ -31,35 +31,42 @@ if [ -z "$1" ]; then
 fi
 
 
-
 hdf_location="$1"
 sdcard_abs="$2"
 
 ./clean_files.sh
 
 abs_path_hdf=`readlink -f $hdf_location`
+hdf_name_only=`basename "$abs_path_hdf" .hdf`
 
 $linux_dir_r/make_kernel.sh
 $linux_dir_r/make_uboot.sh
 $dev_dir_r/make_dtb.sh $abs_path_hdf
 $dev_dir_r/make_fsbl.sh $abs_path_hdf
-$build_dir_r/make_bootbin.sh `basename "$abs_path_hdf" .hdf`
+$build_dir_r/make_bootbin.sh $hdf_name_only
+
+
 
 
 pushd $applications_dir_r
 	for d in * ; do
 
-	    if [ -d $d ]; then
-			pushd $d/
+	    if [ -d "$d" ]; then
+			pushd "$d/"
+
+				mkdir -p "includes"
+				cp -f "$dev_dir_r/fsbl_$hdf_name_only/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/* ./includes
+				cp -f "$dev_dir_r/fsbl_$hdf_name_only/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/* ./includes
+
+
 				if [ -f "make_$d.sh" ]; then
 					echo -e "\e[34m Compiling $d \e[39m"
 					./"make_$d.sh"
 				fi
 			popd
 		fi
-	done
+	done	
 popd
-
 
 
 ./copy_to_sd_card.sh $sdcard_abs
