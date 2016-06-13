@@ -3,7 +3,7 @@
 set -e
 
 if [ -z ${setup_env+x} ]; then
-	echo -e "\e[34m Sourcing setup_env.sh.. \e[39m"
+	echo -e "$c_info Sourcing setup_env.sh.. $c_default"
 	source ./setup_env.sh
 fi
 
@@ -16,16 +16,16 @@ cd "${script_dir_abs}"
 # Functions definitions ########################################################
 
 abort() {
-	echo -e "\e[91m Error in  `basename "$0"`\e[39m"
+	echo -e "$c_error Error in  `basename "$0"`$c_default"
     exit 1
 }
 
 trap 'abort' 0
 
-echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+echo -e "$c_good *** START `basename "$0"` *** $c_default"
 #Copy files to sd card
 
-echo -e "\e[34m Clean $build_dir_r \e[39m"
+echo -e "$c_info Clean $build_dir_r $c_default"
 pushd $build_dir_r
 rm -f ./*.bit
 rm -f ./*.bif
@@ -37,14 +37,14 @@ rm -f ./uImage
 rm -f ./*.dtb	
 popd
 
-echo -e "\e[34m Clean $dev_dir_r \e[39m"
+echo -e "$c_info Clean $dev_dir_r $c_default"
 pushd $dev_dir_r
 
 popd
 
 
 trap : 0
-echo -e "\e[92m *** DONE `basename "$0"` *** \e[39m"
+echo -e "$c_good *** DONE `basename "$0"` *** $c_default"
 
 
 

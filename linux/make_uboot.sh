@@ -3,7 +3,7 @@
 set -e
 
 if [ -z ${setup_env+x} ]; then
-	echo -e "\e[34m Sourcing setup_env.sh.. \e[39m"
+	echo -e "$c_info Sourcing setup_env.sh.. $c_default"
 	source ../setup_env.sh
 fi
 
@@ -21,30 +21,30 @@ pushd $linux_dir_r
 # Functions definitions ########################################################
 
 abort() {
-	echo -e "\e[91m Error in `basename "$0"`\e[39m"
+	echo -e "$c_error Error in `basename "$0"`$c_default"
     exit 1
 }
 
 trap 'abort' 0
 
 
-echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+echo -e "$c_good *** START `basename "$0"` *** $c_default"
 
 if [ ! -d "u-boot-xlnx" ]; then
 	echo `pwd`
-	echo -e "\e[91m Please extract the archive. u-boot-xlnx folder not found\e[39m"
+	echo -e "$c_error Please extract the archive. u-boot-xlnx folder not found$c_default"
 	exit 1
 fi
 
 pushd ./u-boot-xlnx
 
-echo -e "\e[34m Cleaning.. \e[39m"
+echo -e "$c_info Cleaning.. $c_default"
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- distclean
-echo -e "\e[34m Compiling uboot with zturn configuration \e[39m"
+echo -e "$c_info Compiling uboot with zturn configuration $c_default"
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- zynq_zturn_config
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi-
 
-echo -e "\e[34m Copy the generated u-boot /and rename to u-boot.elf to $build_dir_r\e[39m"
+echo -e "$c_info Copy the generated u-boot /and rename to u-boot.elf to $build_dir_r$c_default"
 ls -l ./u-boot
 cp ./u-boot "$build_dir_r/u-boot.elf"
 popd
@@ -54,4 +54,4 @@ popd
 
 
 trap : 0
-echo -e "\e[92m *** DONE `basename "$0"` *** \e[39m"
+echo -e "$c_good *** DONE `basename "$0"` *** $c_default"

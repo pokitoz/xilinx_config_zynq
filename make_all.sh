@@ -3,7 +3,7 @@
 set -e
 
 if [ -z ${setup_env+x} ]; then
-	echo -e "\e[34m Sourcing setup_env.sh.. \e[39m"
+	echo -e "$c_info Sourcing setup_env.sh.. $c_default"
 	source ./setup_env.sh
 fi
 
@@ -16,17 +16,17 @@ cd "${script_dir_abs}"
 # Functions definitions ########################################################
 
 abort() {
-	echo -e "\e[91m Error in `basename "$0"`\e[39m"
+	echo -e "$c_error Error in `basename "$0"`$c_default"
     exit 1
 }
 
 trap 'abort' 0
 
-echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+echo -e "$c_good *** START `basename "$0"` *** $c_default"
 #Copy files to sd card
 
 if [ -z "$1" ]; then
-	echo -e "\e[91m You need to specify a HDF location\e[39m"
+	echo -e "$c_error You need to specify a HDF location$c_default"
 	exit 1
 fi
 
@@ -58,7 +58,7 @@ pushd $applications_dir_r
 				cp -f "$dev_dir_r/fsbl_$hdf_name_only/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/* ./includes
 
 				if [ -f "make_$d.sh" ]; then
-					echo -e "\e[34m Compiling $d \e[39m"
+					echo -e "$c_info Compiling $d $c_default"
 					./"make_$d.sh"
 				fi
 			popd
@@ -71,9 +71,9 @@ popd
 
 
 
-echo -e "\e[34m Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)\e[39m"
-echo -e "\e[34m Use minicom or miniterm.py\e[39m"
+echo -e "$c_info Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)$c_default"
+echo -e "$c_info Use minicom or miniterm.py$c_default"
 
 
 trap : 0
-echo -e "\e[92m *** DONE `basename "$0"` *** \e[39m"
+echo -e "$c_good *** DONE `basename "$0"` *** $c_default"

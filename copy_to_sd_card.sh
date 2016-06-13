@@ -3,7 +3,7 @@
 set -e
 
 if [ -z ${setup_env+x} ]; then
-	echo -e "\e[34m Sourcing setup_env.sh.. \e[39m"
+	echo -e "$c_info Sourcing setup_env.sh.. $c_default"
 	source ./setup_env.sh
 fi
 
@@ -16,13 +16,13 @@ cd "${script_dir_abs}"
 # Functions definitions ########################################################
 
 abort() {
-	echo -e "\e[91m Error in `basename "$0"`\e[39m"
+	echo -e "$c_error Error in `basename "$0"`$c_default"
     exit 1
 }
 
 trap 'abort' 0
 
-echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+echo -e "$c_good *** START `basename "$0"` *** $c_default"
 #Copy files to sd card
 
 sdcard_abs="$1"
@@ -48,7 +48,7 @@ if [ "$(echo "${sdcard_abs}" | grep -P "/dev/sd\w$")" ]; then
 		sdcard_dev_ext3_id="p2"
 		sdcard_preloader_partition_number="p3"
 	else
-		echo -e "\e[91mYou entered a partition. Please enter only the name of the sdcard..\e[39m"
+		echo -e "$c_errorYou entered a partition. Please enter only the name of the sdcard..$c_default"
 		exit 1
 fi
 
@@ -70,7 +70,7 @@ set -e
 	pushd $applications_dir_r
 		for d in * ; do
 		    if [ -d $d ]; then
-				echo -e "\e[34m Copying $d to "$media_ext4/root/Desktop/" \e[39m"
+				echo -e "$c_info Copying $d to "$media_ext4/root/Desktop/" $c_default"
 				sudo cp -r "./$d" "$media_ext4/root/Desktop/"
 			fi
 		done	
@@ -110,4 +110,4 @@ set -e
 
 
 trap : 0
-echo -e "\e[92m *** DONE `basename "$0"` *** \e[39m"
+echo -e "$c_good *** DONE `basename "$0"` *** $c_default"

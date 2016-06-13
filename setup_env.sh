@@ -58,15 +58,17 @@ export env_def_config_kernel="zynq_zturn_defconfig"
 export env_def_config_kernel="xilinx_zynq_defconfig"
 
 
+
+
 #RED
 export c_error="\e[91m"
 #GREEN
 export c_good="\e[92m"
 #BLUE
-export c_info="\e[34m"
+export c_info="\e[94m"
 #default: white
 export c_default="\e[39m"
 
 
 trap : 0
-echo -e "\e[92m *** DONE setup_env.sh *** \e[39m"
+echo -e "\e[92m *** DONE setup_env.sh *** \n\e[39m"

@@ -3,11 +3,11 @@
 #please specify the SD card location.
 #It will paritionate the SDcard to have 2 parts.
 
-echo -e "\e[92m *** START `basename "$0"` *** \e[39m"
+echo -e "$c_good *** START `basename "$0"` *** $c_default"
 
 sdcard_abs="$1"
 
-echo -e "\e[34m Print last dmesg lines \e[39m"
+echo -e "$c_info Print last dmesg lines $c_default"
 dmesg_var=`dmesg | tail -n 3`
 dmesg_var_grep=`echo $dmesg_var | grep "new high speed SD card"`
 
@@ -43,15 +43,15 @@ if [ "$(echo "${sdcard_abs}" | grep -P "/dev/sd\w$")" ]; then
 fi
 
 
-echo -e "\e[34m The fdisk utility does not erase the first few bytes of the first sector in the card\e[39m"
-echo -e "\e[34m dd is used to erase the first sector.\e[39m"
+echo -e "$c_info The fdisk utility does not erase the first few bytes of the first sector in the card$c_default"
+echo -e "$c_info dd is used to erase the first sector.$c_default"
 
 #The fdisk utility does not erase the first few bytes of the first sector in the card
 #dd is used to erase the first sector.
 sudo dd if=/dev/zero of=${sdcard_abs} bs=1024 count=1
 
 size_sd_byte=`sudo fdisk -l ${sdcard_abs} | head -n 2`
-echo -e "\e[34m Size sd card:  $size_sd_byte bytes\e[39m"
+echo -e "$c_info Size sd card:  $size_sd_byte bytes$c_default"
 
 arrIN=(${size_sd_byte// / })
 size_sd_card=${arrIN[4]}
@@ -84,10 +84,10 @@ heads=255
 sectors=63
 lastsector="+200M"
 
-echo -e "\e[34m Use fdisk to part the SD card.\e[39m"
-echo -e "\e[34m Create two partitions on the SD card.\e[39m"
-echo -e "\e[34m One 200 MB sized boot partition. \e[39m"
-echo -e "\e[34m Second partition taking the remaining space on the SD card.\e[39m"
+echo -e "$c_info Use fdisk to part the SD card.$c_default"
+echo -e "$c_info Create two partitions on the SD card.$c_default"
+echo -e "$c_info One 200 MB sized boot partition. $c_default"
+echo -e "$c_info Second partition taking the remaining space on the SD card.$c_default"
 
 echo -e "x\nh\n$heads\ns\n$sector\nc\n$new_cylinders\nr\nn\np\n1\n\n$lastsector\nn\np\n2\n\n\na\n1\nt\n1\nc\nt\n2\n83\np\nw\n" | sudo fdisk "${sdcard_abs}"
 
@@ -109,15 +109,15 @@ sudo sync
 
 
 if [ "$2" -eq "1" ]; then
-	echo -e "\e[34m Call ./sd_write_image.sh \e[39m"
+	echo -e "$c_info Call ./sd_write_image.sh $c_default"
 	./sd_write_image.sh ${sdcard_abs}
 
 fi
 
 
 
-echo -e "\e[34m \e[39m"
-echo -e "\e[34m You may need to plug/unplug the SD card to see the partitions. \e[39m"
-echo -e "\e[34m \e[39m"
+echo -e "$c_info $c_default"
+echo -e "$c_info You may need to plug/unplug the SD card to see the partitions. $c_default"
+echo -e "$c_info $c_default"
 
 
