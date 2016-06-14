@@ -65,6 +65,16 @@ pushd "dtb_$basename_hdf"
 	
 	echo -e "$c_info Generate the DTB in `pwd`/dts.. $c_default" 
 	pushd "dts"
+
+		head -n -2 pl.dtsi > pl.txt
+ 		mv pl.txt pl.dtsi
+
+		if [ -f ./add.dtsi ]; then
+			cat ./add.dtsi >> ./pl.dtsi
+		fi		
+
+		echo -e "\t};\n};" >> pl.dtsi
+
 		dtc -I dts -O dtb -o devicetree.dtb system.dts
 		dtc -I dtb -O dts -o out_system.dts devicetree.dtb 
 	popd

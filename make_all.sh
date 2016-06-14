@@ -58,6 +58,8 @@ pushd $applications_dir_r
 				cp -f "$dev_dir_r/fsbl_$hdf_name_only/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/* ./includes
 
 				if [ -f "make_$d.sh" ]; then
+					echo -e "$c_info Changing chmod of the script $d $c_default"
+					chmod +x ./"make_$d.sh"
 					echo -e "$c_info Compiling $d $c_default"
 					./"make_$d.sh"
 				fi

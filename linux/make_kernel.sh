@@ -34,18 +34,43 @@ trap 'abort' 0
 
 echo -e "$c_good *** START `basename "$0"` *** $c_default"
 
-if [ ! -d "linux-xlnx" ]; then
+if [ ! -d "$kernel_dir" ]; then
+
+
+	echo -e "$c_error Could not find $kernel_dir_r $c_default"
 	echo `pwd`
-	echo -e "$c_error Please extract the archive. linux-xlnx folder not found$c_default"
+
+	echo -e ""
+	echo -e "$c_error Please extract the archive. $kernel_dir folder not found in $linux_dir_r$c_default"
+	echo -e "$c_error Or you can clone one of the following repository in $linux_dir_r$c_default"	
+
+	echo -e ""
+	echo -e "$c_error https://github.com/Xilinx/linux-xlnx.git $c_default"
+	echo -e "$c_error https://github.com/Digilent/linux-digilent $c_default"
+	echo -e ""
+
+
+	echo -e "$c_error Do not forget to update the ./set_env.sh script! $c_default"	
+	echo -e "$c_error \$kernel_dir should be updated depending the name of the folder$c_default"
+	echo -e ""
 	exit 1
 fi
 
 
-pushd $kernel_dir_r
+pushd $kernel_dir
+
+
+#set +e
+#echo -e "$c_info You are using the branch: $c_default"
+#git remote show origin
+#echo -e "$c_info ------------------------- $c_default"
+#set -e
+
 
 echo -e "$c_info Cleaning.. $c_default"
 
-cp $preset_dir_r/zynq_zturn_defconfig ./arch/arm/configs/
+cp $preset_dir_r/config_kernel/* ./arch/arm/configs/
+
 
 #make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- distclean
 echo -e "$c_info Compiling linux kernel with $defconfig_kernel configuration $c_default"

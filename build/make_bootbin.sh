@@ -40,6 +40,10 @@ the_ROM_image:
 }
 EOF
 
+#Boot Time Memory Setup 
+#Memory can be reserved such that the kernel does not use it 
+#MEM=512M on the kernel command line causes it to use only 512M of 
+#memory
 
 linux_kernel_mem_bootarg='1018M'
 
@@ -50,7 +54,7 @@ cat <<EOF > ./uEnv.txt
 bootenv=uEnv.txt
 
 # Time before booting
-bootdelay=3
+bootdelay=1
 
 # BITSTREAM
 bitstream_image=7z020.bit

@@ -40,8 +40,8 @@ pushd ./u-boot-xlnx
 
 echo -e "$c_info Cleaning.. $c_default"
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- distclean
-echo -e "$c_info Compiling uboot with zturn configuration $c_default"
-make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- zynq_zturn_config
+echo -e "$c_info Compiling uboot with $uboot_configuration $c_default"
+make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- $uboot_configuration
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi-
 
 echo -e "$c_info Copy the generated u-boot /and rename to u-boot.elf to $build_dir_r$c_default"
