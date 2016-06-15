@@ -65,7 +65,7 @@ pushd $applications_dir_r
 				fi
 			popd
 		fi
-	done	
+	done
 popd
 
 
@@ -75,7 +75,7 @@ popd
 
 echo -e "$c_info Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)$c_default"
 echo -e "$c_info Use minicom or miniterm.py$c_default"
-
+date
 
 trap : 0
 echo -e "$c_good *** DONE `basename "$0"` *** $c_default"

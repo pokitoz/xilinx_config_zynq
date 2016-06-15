@@ -31,11 +31,6 @@ export projects_dir="projects"
 export applications_dir="applications"
 export tools_dir="tools"
 
-export kernel_dir="linux-xlnx-official"
-#export kernel_dir="linux-xlnx-diligent"
-#export kernel_dir="linux-xlnx-cd-myir"
-
-
 
 export dev_dir="dev"
 export linux_dir="linux"
@@ -57,8 +52,13 @@ export projects_dir_r="$PWD/$projects_dir"
 export applications_dir_r="$dev_dir_r/$applications_dir"
 export preset_dir_r="$PWD/$preset_dir"
 
-#export env_def_config_kernel="zynq_zturn_defconfig"
-export env_def_config_kernel="xilinx_zynq_defconfig"
+
+#export kernel_dir="linux-xlnx-official"
+#export kernel_dir="linux-xlnx-diligent"
+export kernel_dir="linux-xlnx-cd-myir"
+
+export env_def_config_kernel="zynq_zturn_defconfig"
+#export env_def_config_kernel="xilinx_zynq_defconfig"
 #export env_def_config_kernel="zynq_custom_defconfig"
 #export env_def_config_kernel="zynq_preset_custom"
 

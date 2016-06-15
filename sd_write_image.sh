@@ -46,7 +46,7 @@ sudo apt-get install pv
 echo -e "$c_info Gunzip the xillinux image $c_default"
 gunzip ./filesystem/xillinux-1.3.img.gz
 echo -e "$c_info Copy the image to the SD card (might take a while) $c_default"
-sudo dd if="./filesystem/xillinux-1.3.img" bs=4M of=${sdcard_abs} | pv | dd of=/dev/null
+sudo dd if="./xilinx_source/filesystem/xillinux-1.3.img" bs=4M of=${sdcard_abs} | pv | dd of=/dev/null
 rm -rf ./filesystem/xillinux-1.3.img
 sync
 

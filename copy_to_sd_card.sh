@@ -73,7 +73,12 @@ set -e
 				echo -e "$c_info Copying $d to "$media_ext4/root/Desktop/" $c_default"
 				sudo cp -r "./$d" "$media_ext4/root/Desktop/"
 			fi
-		done	
+		done
+
+		for d in *.sh ; do
+			sudo cp $d "$media_ext4/root/Desktop/"
+		done
+
 	popd
 
 	sudo sync

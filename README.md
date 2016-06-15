@@ -1,6 +1,21 @@
 # xilinx_config_zynq
 
 
+= SD card boot image =
+
+Platform: <platform>
+Application: <elf>
+
+1. Copy the contents of this directory to an SD card
+2. Set boot mode to SD
+     Jumper J1 NC
+     Jumper J2 1-2
+3. Insert SD card and turn board on
+
+The DONE LED (red led) should be on
+
+
+
 Those scripts generates a complete system for a **Myir** board.
 - Linux
 - Config of the FPGA
