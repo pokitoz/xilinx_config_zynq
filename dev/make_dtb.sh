@@ -69,8 +69,8 @@ pushd "dtb_$basename_hdf"
 		head -n -2 pl.dtsi > pl.txt
  		mv pl.txt pl.dtsi
 
-		if [ -f ./add.dtsi ]; then
-			cat ./add.dtsi >> ./pl.dtsi
+		if [ -f "$preset_dir_r/add_to_pl.dtsi" ]; then
+			cat "$preset_dir_r/add_to_pl.dtsi" >> ./pl.dtsi
 		fi		
 
 		echo -e "\t};\n};" >> pl.dtsi

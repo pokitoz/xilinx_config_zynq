@@ -42,6 +42,13 @@ fi
 
 echo -e "$c_info Creating fsbl for $hdf_path.. $c_default" 
 mkdir -p "app"
+
+pushd app
+	if [ -f "Makefile" ]; then
+		make clean
+	fi
+popd
+
 echo "open_hw_design $basename_hdf.hdf; generate_app -hw $basename_hdf -os standalone -proc ps7_cortexa9_0 -app zynq_fsbl -compile -sw fsbl -dir app" | hsi
 echo -e "$c_info Renaming of executable.elf to fsbl.elf.. $c_default" 
 mv -f ./app/executable.elf ./app/fsbl.elf

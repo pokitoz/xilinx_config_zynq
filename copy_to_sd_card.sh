@@ -70,13 +70,16 @@ set -e
 	pushd $applications_dir_r
 		for d in * ; do
 		    if [ -d $d ]; then
-				echo -e "$c_info Copying $d to "$media_ext4/root/Desktop/" $c_default"
+				echo -e "$c_info Copying $d to "$media_ext4/root/Desktop/$d" $c_default"
 				sudo cp -r "./$d" "$media_ext4/root/Desktop/"
 			fi
 		done
 
+		echo -e "$c_info -------------------------------- $c_default"
+
 		for d in *.sh ; do
-			sudo cp $d "$media_ext4/root/Desktop/"
+			echo -e "$c_info Copying script $d to "$media_ext4/root/Desktop/" $c_default"
+			sudo cp "$d" "$media_ext4/root/Desktop/"
 		done
 
 	popd

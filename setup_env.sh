@@ -39,6 +39,10 @@ export preset_dir="preset"
 
 
 
+#export kernel_dir="linux-xlnx-official"
+#export kernel_dir="linux-xlnx-diligent"
+export kernel_dir="linux-xlnx-cd-myir"
+
 echo -e "\e[34m Find absolute directory paths.. \e[39m" 
 
 export tools_dir_r="$PWD/$tools_dir"
@@ -52,10 +56,8 @@ export projects_dir_r="$PWD/$projects_dir"
 export applications_dir_r="$dev_dir_r/$applications_dir"
 export preset_dir_r="$PWD/$preset_dir"
 
+export KDIR="$kernel_dir_r"
 
-#export kernel_dir="linux-xlnx-official"
-#export kernel_dir="linux-xlnx-diligent"
-export kernel_dir="linux-xlnx-cd-myir"
 
 export env_def_config_kernel="zynq_zturn_defconfig"
 #export env_def_config_kernel="xilinx_zynq_defconfig"
