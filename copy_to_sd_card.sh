@@ -84,6 +84,14 @@ set -e
 
 	popd
 
+
+	pushd $preset_dir
+		if [ -f "etc_network_interfaces" ]; then
+			sudo cp "etc_network_interfaces" "$media_ext4/etc/network/interfaces"		
+		fi
+	popd
+
+
 	sudo sync
 
     sudo umount "${sdcard_abs}$sdcard_dev_ext3_id"
@@ -98,8 +106,6 @@ set -e
 	sudo cp "$build_dir_r/BOOT.bin" "$media_fat/"
 	sudo cp "$build_dir_r/uEnv.txt" "$media_fat/"
 	sudo cp "$build_dir_r/7z020.bit" "$media_fat"
-
-
 
 	ls -l "$media_fat/"
 
