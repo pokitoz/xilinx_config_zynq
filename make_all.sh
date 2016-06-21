@@ -26,9 +26,9 @@ function asking_to_do {
 	echo -e "\e[0;33m"
   read -r -s -n 1 -p "Do $ACTION ? [y,n] : " doit
   case $doit in
-    y|Y) echo -e "\e[0;33m doing $ACTION" && $COMMAND;;
-    n|N) echo -e "\e[0;33m passing $ACTION" ;;
-    *) echo -e "\e[0;33m bad option" && asking_to_do $ACTION $COMMAND ;;
+    y|Y) echo -e "$c_orange doing $ACTION $c_orange" && $COMMAND;;
+    n|N) echo -e "$c_orange passing $ACTION $c_orange" ;;
+    *) echo -e "$c_orange bad option $c_orange" && asking_to_do $ACTION $COMMAND ;;
   esac
 }
 
@@ -46,32 +46,65 @@ fi
 hdf_location="$1"
 sdcard_abs="$2"
 
-if [ "$3" = "y" ]
-then
-	./clean_files.sh
-else
-	asking_to_do "clean files" ./clean_files.sh
-fi
+#if [ "$3" = "y" ]
+#then
+#	./clean_files.sh
+#else
+#	asking_to_do "clean files" ./clean_files.sh
+#fi
 #./clean_files.sh
 
 abs_path_hdf=`readlink -f $hdf_location`
 hdf_name_only=`basename "$abs_path_hdf" .hdf`
 
 
-if [ "$3" = "y" ]
-then
-	$linux_dir_r/make_kernel.sh
-	$linux_dir_r/make_uboot.sh
-	$dev_dir_r/make_dtb.sh $abs_path_hdf
-	$dev_dir_r/make_fsbl.sh $abs_path_hdf
-	$build_dir_r/make_bootbin.sh $hdf_name_only
-else
-	asking_to_do "build kernel" $linux_dir_r/make_kernel.sh
-	asking_to_do "build uboot" $linux_dir_r/make_uboot.sh
-	asking_to_do "build dtb" "$dev_dir_r/make_dtb.sh $abs_path_hdf"
-	asking_to_do "make fsbl" "$dev_dir_r/make_fsbl.sh $abs_path_hdf"
-	asking_to_do "make bootbin" "$build_dir_r/make_bootbin.sh $hdf_name_only"
-fi
+echo -e "$c_orange MENU DE LA MORT $c_orange"
+
+select opt in $OPTIONS_MENU; do
+		if [ "$opt" = "Quit" ]; then
+		 echo done
+		 exit
+		elif [ "$opt" = "Make_all" ]; then
+			./clean_files.sh
+			$linux_dir_r/make_kernel.sh
+			$linux_dir_r/make_uboot.sh
+			$dev_dir_r/make_dtb.sh $abs_path_hdf
+			$dev_dir_r/make_fsbl.sh $abs_path_hdf
+			$build_dir_r/make_bootbin.sh $hdf_name_only
+			./copy_to_sd_card.sh $sdcard_abs
+		elif [ "$opt" = "Clean_build" ]; then
+			./clean_files.sh
+		elif [ "$opt" = "Make_kernel" ]; then
+			$linux_dir_r/make_kernel.sh
+		elif [ "$opt" = "Make_Uboot" ]; then
+			$linux_dir_r/make_uboot.sh
+		elif [ "$opt" = "Make_dtb" ]; then
+			$dev_dir_r/make_dtb.sh $abs_path_hdf
+		elif [ "$opt" = "Make_fsbl" ]; then
+			$dev_dir_r/make_fsbl.sh $abs_path_hdf
+		elif [ "$opt" = "Make_bootbin" ]; then
+			$build_dir_r/make_bootbin.sh $hdf_name_only
+		elif [ "$opt" = "Push_to_sd_card" ]; then
+			./copy_to_sd_card.sh $sdcard_abs
+		else
+		 echo bad option
+		fi
+done
+
+#if [ "$3" = "y" ]
+#then
+#	$linux_dir_r/make_kernel.sh
+#	$linux_dir_r/make_uboot.sh
+#	$dev_dir_r/make_dtb.sh $abs_path_hdf
+#	$dev_dir_r/make_fsbl.sh $abs_path_hdf
+#	$build_dir_r/make_bootbin.sh $hdf_name_only
+#else
+#	asking_to_do "build kernel" $linux_dir_r/make_kernel.sh
+#	asking_to_do "build uboot" $linux_dir_r/make_uboot.sh
+#	asking_to_do "build dtb" "$dev_dir_r/make_dtb.sh $abs_path_hdf"
+#	asking_to_do "make fsbl" "$dev_dir_r/make_fsbl.sh $abs_path_hdf"
+#	asking_to_do "make bootbin" "$build_dir_r/make_bootbin.sh $hdf_name_only"
+#fi
 
 #$linux_dir_r/make_kernel.sh
 #$linux_dir_r/make_uboot.sh
@@ -103,12 +136,12 @@ pushd $applications_dir_r
 popd
 
 
-if [ "$3" = "y" ]
-then
-	./copy_to_sd_card.sh $sdcard_abs
-else
-	asking_to_do "copy to sd card" "./copy_to_sd_card.sh $sdcard_abs"
-fi
+#if [ "$3" = "y" ]
+#then
+#	./copy_to_sd_card.sh $sdcard_abs
+#else
+#	asking_to_do "copy to sd card" "./copy_to_sd_card.sh $sdcard_abs"
+#fi
 #./copy_to_sd_card.sh $sdcard_abs
 
 

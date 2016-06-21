@@ -21,7 +21,7 @@ export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
 export ARCH=arm
 
 
-echo -e "\e[34m Sourcing /opt/Xilinx/SDK/2016.2/settings64.sh.. \e[39m" 
+echo -e "\e[34m Sourcing /opt/Xilinx/SDK/2016.2/settings64.sh.. \e[39m"
 source /opt/Xilinx/SDK/2016.2/settings64.sh
 
 
@@ -43,7 +43,7 @@ export preset_dir="preset"
 #export kernel_dir="linux-xlnx-diligent"
 export kernel_dir="linux-xlnx-cd-myir"
 
-echo -e "\e[34m Find absolute directory paths.. \e[39m" 
+echo -e "\e[34m Find absolute directory paths.. \e[39m"
 
 export tools_dir_r="$PWD/$tools_dir"
 export build_dir_r="$PWD/$build_dir"
@@ -64,17 +64,20 @@ export env_def_config_kernel="zynq_zturn_defconfig"
 #export env_def_config_kernel="zynq_custom_defconfig"
 #export env_def_config_kernel="zynq_preset_custom"
 
-echo -e "\e[34m set default configuration to $env_def_config_kernel.. \e[39m" 
+echo -e "\e[34m set default configuration to $env_def_config_kernel.. \e[39m"
 
 export uboot_configuration="zynq_zturn_config"
-echo -e "\e[34m set uboot configuration to $uboot_configuration.. \e[39m" 
+echo -e "\e[34m set uboot configuration to $uboot_configuration.. \e[39m"
 
 export KDIR="$kernel_dir_r"
-echo -e "\e[34m Set KDIR=$kernel_dir_r\e[39m" 
+echo -e "\e[34m Set KDIR=$kernel_dir_r\e[39m"
 export ARCH=arm
-echo -e "\e[34m Set ARCH=$ARCH\e[39m" 
+echo -e "\e[34m Set ARCH=$ARCH\e[39m"
 export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
-echo -e "\e[34m Set CROSS_COMPILE=$CROSS_COMPILE\e[39m" 
+echo -e "\e[34m Set CROSS_COMPILE=$CROSS_COMPILE\e[39m"
+
+#OPTIONS MENU MAKE ALL
+OPTIONS_MENU="Make_all Clean_build Make_kernel Make_Uboot Make_dtb Make_fsbl Make_bootbin Push_to_sd_card Quit"
 
 #RED
 export c_error="\e[91m"
@@ -82,8 +85,11 @@ export c_error="\e[91m"
 export c_good="\e[92m"
 #BLUE
 export c_info="\e[94m"
+#ORANGE
+export c_orange="\e[0;33m"
 #default: white
 export c_default="\e[39m"
+
 
 
 trap : 0
