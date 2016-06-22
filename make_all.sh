@@ -71,6 +71,7 @@ select opt in $OPTIONS_MENU; do
 			$dev_dir_r/make_dtb.sh $abs_path_hdf
 			$dev_dir_r/make_fsbl.sh $abs_path_hdf
 			$build_dir_r/make_bootbin.sh $hdf_name_only
+			$dev_dir_r/make_applications.sh $hdf_name_only
 			./copy_to_sd_card.sh $sdcard_abs
 		elif [ "$opt" = "Clean_build" ]; then
 			./clean_files.sh
