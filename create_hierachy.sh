@@ -88,6 +88,7 @@ sudo chmod +x ./setup_env.sh
 
 sudo chmod +x $build_dir_r/make_bootbin.sh
 sudo chmod +x $dev_dir_r/make_dtb.sh
+sudo chmod +x $dev_dir_r/make_applications.sh
 sudo chmod +x $dev_dir_r/make_fsbl.sh
 sudo chmod +x $linux_dir_r/make_kernel.sh
 sudo chmod +x $linux_dir_r/make_uboot.sh

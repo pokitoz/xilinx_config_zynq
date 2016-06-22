@@ -26,8 +26,8 @@ function asking_to_do {
 	echo -e "\e[0;33m"
   read -r -s -n 1 -p "Do $ACTION ? [y,n] : " doit
   case $doit in
-    y|Y) echo -e "$c_orange doing $ACTION $c_orange" && $COMMAND;;
-    n|N) echo -e "$c_orange passing $ACTION $c_orange" ;;
+    y|Y) echo -e "$c_orange doing $ACTION $c_default" && $COMMAND;;
+    n|N) echo -e "$c_orange passing $ACTION $c_default" ;;
     *) echo -e "$c_orange bad option $c_orange" && asking_to_do $ACTION $COMMAND ;;
   esac
 }
@@ -58,7 +58,7 @@ abs_path_hdf=`readlink -f $hdf_location`
 hdf_name_only=`basename "$abs_path_hdf" .hdf`
 
 
-echo -e "$c_orange MENU DE LA MORT $c_default"
+echo -e "$c_orange MENU DE LA MUERTE $c_default"
 
 select opt in $OPTIONS_MENU; do
 		if [ "$opt" = "Quit" ]; then
@@ -95,6 +95,8 @@ select opt in $OPTIONS_MENU; do
 			$dev_dir_r/make_fsbl.sh $abs_path_hdf
 		elif [ "$opt" = "Make_bootbin" ]; then
 			$build_dir_r/make_bootbin.sh $hdf_name_only
+		elif [ "$opt" = "Make_applications" ]; then
+			$dev_dir_r/make_applications.sh $hdf_name_only
 		elif [ "$opt" = "Push_to_sd_card" ]; then
 			./copy_to_sd_card.sh $sdcard_abs
 		else
@@ -126,25 +128,7 @@ done
 
 
 
-pushd $applications_dir_r
-	for d in * ; do
 
-	    if [ -d "$d" ]; then
-			pushd "$d/"
-
-				mkdir -p "includes"
-				cp -f "$dev_dir_r/fsbl_$hdf_name_only/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/* ./includes
-
-				if [ -f "make_$d.sh" ]; then
-					echo -e "$c_info Changing chmod of the script $d $c_default"
-					chmod +x ./"make_$d.sh"
-					echo -e "$c_info Compiling $d $c_default"
-					./"make_$d.sh"
-				fi
-			popd
-		fi
-	done
-popd
 
 
 #if [ "$3" = "y" ]

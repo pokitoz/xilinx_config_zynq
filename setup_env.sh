@@ -77,7 +77,7 @@ export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
 echo -e "\e[34m Set CROSS_COMPILE=$CROSS_COMPILE\e[39m"
 
 #OPTIONS MENU MAKE ALL
-export OPTIONS_MENU="Make_all Clean_build Make_kernel Make_Uboot Make_dtb Make_fsbl Make_bootbin Push_to_sd_card Quit"
+export OPTIONS_MENU="Make_all Clean_build Make_kernel Make_Uboot Make_dtb Make_fsbl Make_bootbin Make_applications Push_to_sd_card Quit"
 export OPTIONS_MENU_KERNEL="Use_default_config Use_custom_config Quit"
 
 #RED
