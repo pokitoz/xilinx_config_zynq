@@ -75,7 +75,18 @@ select opt in $OPTIONS_MENU; do
 		elif [ "$opt" = "Clean_build" ]; then
 			./clean_files.sh
 		elif [ "$opt" = "Make_kernel" ]; then
-			$linux_dir_r/make_kernel.sh
+			select opt_s in $OPTIONS_MENU_KERNEL; do
+				if [ "$opt_s" = "Quit" ]; then
+				 echo done
+				 exit
+			 elif [ "$opt_s" = "Use_default_config" ]; then
+					$linux_dir_r/make_kernel.sh
+				elif [ "$opt_s" = "Use_custom_config" ]; then
+					$linux_dir_r/make_kernel.sh zynq_custom_defconfig
+				else
+				 echo bad option
+				fi
+			done
 		elif [ "$opt" = "Make_Uboot" ]; then
 			$linux_dir_r/make_uboot.sh
 		elif [ "$opt" = "Make_dtb" ]; then

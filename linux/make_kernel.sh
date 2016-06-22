@@ -13,15 +13,6 @@ cd "${script_dir_abs}"
 
 pushd $linux_dir_r
 
-
-if [ -z $1 ]; then
-	echo -e "$c_info Nothing specified, using $env_def_config_kernel.. $c_default"
-	defconfig_kernel=$env_def_config_kernel
-else
-	defconfig_kernel=$1
-fi
-
-
 # Functions definitions ########################################################
 
 abort() {
@@ -42,7 +33,7 @@ if [ ! -d "$kernel_dir" ]; then
 
 	echo -e ""
 	echo -e "$c_error Please extract the archive. $kernel_dir folder not found in $linux_dir_r$c_default"
-	echo -e "$c_error Or you can clone one of the following repository in $linux_dir_r$c_default"	
+	echo -e "$c_error Or you can clone one of the following repository in $linux_dir_r$c_default"
 
 	echo -e ""
 	echo -e "$c_error https://github.com/Xilinx/linux-xlnx.git $c_default"
@@ -50,7 +41,7 @@ if [ ! -d "$kernel_dir" ]; then
 	echo -e ""
 
 
-	echo -e "$c_error Do not forget to update the ./set_env.sh script! $c_default"	
+	echo -e "$c_error Do not forget to update the ./set_env.sh script! $c_default"
 	echo -e "$c_error \$kernel_dir should be updated depending the name of the folder$c_default"
 	echo -e ""
 	exit 1
@@ -68,13 +59,20 @@ pushd $kernel_dir
 
 
 echo -e "$c_info Cleaning.. $c_default"
-
-cp $preset_dir_r/config_kernel/* ./arch/arm/configs/
-
-
 #make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- distclean
+
+if [ -z $1 ]; then
+	echo -e "$c_info Nothing specified, using zynq_zturn_defconfig .. $c_default"
+	defconfig_kernel=zynq_zturn_defconfig
+	cp $preset_dir_r/config_kernel/$defconfig_kernel ./arch/arm/configs/zynq_zturn_defconfig
+else
+	echo -e "$c_info Using custom config $1 .. $c_default"
+	defconfig_kernel=$1
+	cp $preset_dir_r/config_kernel/$defconfig_kernel ./arch/arm/configs/zynq_zturn_defconfig
+fi
+
 echo -e "$c_info Compiling linux kernel with $defconfig_kernel configuration $c_default"
-make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- $defconfig_kernel
+make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- zynq_zturn_defconfig
 make -j4 ARCH=arm CROSS_COMPILE=arm-xilinx-linux-gnueabi- UIMAGE_LOADADDR=0x8000 uImage
 
 echo -e "$c_info Generate all the Device tree Binary files $c_default"
