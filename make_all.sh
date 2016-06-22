@@ -63,7 +63,7 @@ echo -e "$c_orange MENU DE LA MORT $c_orange"
 select opt in $OPTIONS_MENU; do
 		if [ "$opt" = "Quit" ]; then
 		 echo done
-		 exit
+		 break
 		elif [ "$opt" = "Make_all" ]; then
 			#./clean_files.sh
 			#$linux_dir_r/make_kernel.sh
@@ -78,7 +78,7 @@ select opt in $OPTIONS_MENU; do
 			select opt_s in $OPTIONS_MENU_KERNEL; do
 				if [ "$opt_s" = "Quit" ]; then
 				 echo done
-				 exit
+				 break
 			 elif [ "$opt_s" = "Use_default_config" ]; then
 					$linux_dir_r/make_kernel.sh
 				elif [ "$opt_s" = "Use_custom_config" ]; then
