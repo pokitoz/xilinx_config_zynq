@@ -64,7 +64,7 @@ set -e
     sudo mkdir -p "$media_ext4"
     sudo mount -t ext4 "${sdcard_abs}$sdcard_dev_ext3_id" "$media_ext4"
 	#Copy files in rootfs
-#	
+#
 
 
 	pushd $applications_dir_r
@@ -87,7 +87,10 @@ set -e
 
 	pushd $preset_dir
 		if [ -f "etc_network_interfaces" ]; then
-			sudo cp "etc_network_interfaces" "$media_ext4/etc/network/interfaces"		
+			sudo cp "etc_network_interfaces" "$media_ext4/etc/network/interfaces"
+		fi
+		if [ -f "rc.local" ]; then
+			sudo cp "rc.local" "$media_ext4/etc/rc.local"
 		fi
 	popd
 
