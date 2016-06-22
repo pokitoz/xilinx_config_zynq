@@ -65,8 +65,8 @@ select opt in $OPTIONS_MENU; do
 		 echo done
 		 exit
 		elif [ "$opt" = "Make_all" ]; then
-			./clean_files.sh
-			$linux_dir_r/make_kernel.sh
+			#./clean_files.sh
+			#$linux_dir_r/make_kernel.sh
 			$linux_dir_r/make_uboot.sh
 			$dev_dir_r/make_dtb.sh $abs_path_hdf
 			$dev_dir_r/make_fsbl.sh $abs_path_hdf
