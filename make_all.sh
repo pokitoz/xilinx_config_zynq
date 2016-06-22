@@ -58,11 +58,11 @@ abs_path_hdf=`readlink -f $hdf_location`
 hdf_name_only=`basename "$abs_path_hdf" .hdf`
 
 
-echo -e "$c_orange MENU DE LA MORT $c_orange"
+echo -e "$c_orange MENU DE LA MORT $c_default"
 
 select opt in $OPTIONS_MENU; do
 		if [ "$opt" = "Quit" ]; then
-		 echo done
+		 echo "Exit menu"
 		 break
 		elif [ "$opt" = "Make_all" ]; then
 			#./clean_files.sh
@@ -77,14 +77,14 @@ select opt in $OPTIONS_MENU; do
 		elif [ "$opt" = "Make_kernel" ]; then
 			select opt_s in $OPTIONS_MENU_KERNEL; do
 				if [ "$opt_s" = "Quit" ]; then
-				 echo done
+				 echo "Exit sub menu"
 				 break
 			 elif [ "$opt_s" = "Use_default_config" ]; then
 					$linux_dir_r/make_kernel.sh
 				elif [ "$opt_s" = "Use_custom_config" ]; then
 					$linux_dir_r/make_kernel.sh zynq_custom_defconfig
 				else
-				 echo bad option
+				 echo "Bad option"
 				fi
 			done
 		elif [ "$opt" = "Make_Uboot" ]; then
@@ -98,7 +98,7 @@ select opt in $OPTIONS_MENU; do
 		elif [ "$opt" = "Push_to_sd_card" ]; then
 			./copy_to_sd_card.sh $sdcard_abs
 		else
-		 echo bad option
+		 echo "Bad option"
 		fi
 done
 
