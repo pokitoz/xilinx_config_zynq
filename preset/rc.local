@@ -14,11 +14,10 @@
 ifup eth0
 
 echo "Changing root password to root"
-password="root"
 
 # set root password to "1234" (needed so we have a password to supply ARM DS-5
 # when remote debugging)
-echo -e "${password}\n${password}\n" | passwd root
+echo -e "root\nroot\n" | passwd root
 
 # allow root SSH login with password (needed so we can use ARM DS-5 for remote
 # debugging)
