@@ -70,6 +70,14 @@ pushd $dev_dir_r
 	mkdir -p ./applications
 popd
 
+pushd $preset_dir_r
+
+	echo -e "$c_info Create folders $preset_dir_r/pkg$c_default"
+	mkdir -p ./pkg
+	echo -e "$c_info Create folders $preset_dir_r/config_kernel$c_default"
+	mkdir -p ./config_kernel
+popd
+
 echo -e "$c_info Final hierarchy (if tree package is installed)$c_default"
 set +e
 tree -d --filelimit 10000 -L 2 ./

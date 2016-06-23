@@ -85,14 +85,18 @@ set -e
 	popd
 
 
-	pushd $preset_dir
+	pushd $preset_dir_r
 		if [ -f "etc_network_interfaces" ]; then
 			sudo cp "etc_network_interfaces" "$media_ext4/etc/network/interfaces"
 		fi
 		if [ -f "rc.local" ]; then
 			sudo cp "rc.local" "$media_ext4/etc/rc.local"
 		fi
+
+		sudo cp -r ./pkg "$media_ext4/root/Desktop/"
+
 	popd
+
 
 
 	sudo sync
@@ -109,6 +113,8 @@ set -e
 	sudo cp "$build_dir_r/BOOT.bin" "$media_fat/"
 	sudo cp "$build_dir_r/uEnv.txt" "$media_fat/"
 	sudo cp "$build_dir_r/7z020.bit" "$media_fat"
+
+
 
 	ls -l "$media_fat/"
 
