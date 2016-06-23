@@ -26,6 +26,7 @@ return [dict create \
     CONFIG.PCW_ACT_ENET0_PERIPHERAL_FREQMHZ {125.000000}  \
     CONFIG.PCW_ACT_SDIO_PERIPHERAL_FREQMHZ {100.000000}  \
     CONFIG.PCW_ACT_UART_PERIPHERAL_FREQMHZ {100.000000}  \
+    CONFIG.PCW_ACT_CAN_PERIPHERAL_FREQMHZ {100.000000}  \
     CONFIG.PCW_ACT_WDT_PERIPHERAL_FREQMHZ {83.333336}  \
     CONFIG.PCW_ACT_FPGA0_PERIPHERAL_FREQMHZ {100.000000}  \
     CONFIG.PCW_ACT_TTC0_CLK0_PERIPHERAL_FREQMHZ {83.333336}  \
@@ -43,12 +44,18 @@ return [dict create \
     CONFIG.PCW_ARMPLL_CTRL_FBDIV {45}  \
     CONFIG.PCW_CPU_CPU_PLL_FREQMHZ {1500.000}  \
     CONFIG.PCW_SDIO_PERIPHERAL_VALID {1}  \
+    CONFIG.PCW_CAN_PERIPHERAL_VALID {1}  \
     CONFIG.PCW_UART_PERIPHERAL_VALID {1}  \
+    CONFIG.PCW_USE_S_AXI_HP0 {1}  \
     CONFIG.PCW_M_AXI_GP0_FREQMHZ {100}  \
+    CONFIG.PCW_S_AXI_HP0_FREQMHZ {100}  \
+    CONFIG.PCW_USE_FABRIC_INTERRUPT {1}  \
+    CONFIG.PCW_EN_CAN0 {1}  \
     CONFIG.PCW_EN_ENET0 {1}  \
     CONFIG.PCW_EN_GPIO {1}  \
     CONFIG.PCW_EN_SDIO0 {1}  \
     CONFIG.PCW_EN_UART1 {1}  \
+    CONFIG.PCW_IRQ_F2P_INTR {1}  \
     CONFIG.PCW_PRESET_BANK1_VOLTAGE {LVCMOS 1.8V}  \
     CONFIG.PCW_UIPARAM_DDR_PARTNO {MT41J256M16 RE-125}  \
     CONFIG.PCW_UIPARAM_DDR_DRAM_WIDTH {16 Bits}  \
@@ -69,6 +76,8 @@ return [dict create \
     CONFIG.PCW_SD0_GRP_WP_IO {MIO 47}  \
     CONFIG.PCW_UART1_PERIPHERAL_ENABLE {1}  \
     CONFIG.PCW_UART1_UART1_IO {MIO 48 .. 49}  \
+    CONFIG.PCW_CAN0_PERIPHERAL_ENABLE {1}  \
+    CONFIG.PCW_CAN0_CAN0_IO {MIO 14 .. 15}  \
     CONFIG.PCW_USB_RESET_ENABLE {1}  \
     CONFIG.PCW_I2C_RESET_ENABLE {1}  \
     CONFIG.PCW_GPIO_PERIPHERAL_ENABLE {1}  \
@@ -291,8 +300,8 @@ return [dict create \
     CONFIG.PCW_MIO_53_IOTYPE {LVCMOS 1.8V}  \
     CONFIG.PCW_MIO_53_DIRECTION {inout}  \
     CONFIG.PCW_MIO_53_SLEW {slow}  \
-    CONFIG.PCW_MIO_TREE_PERIPHERALS {ENET Reset#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#SD 0#SD 0#SD 0#SD 0#SD 0#SD 0#SD 0#SD 0#UART 1#UART 1#GPIO#GPIO#Enet 0#Enet 0}  \
-    CONFIG.PCW_MIO_TREE_SIGNALS {reset#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#gpio[10]#gpio[11]#gpio[12]#gpio[13]#gpio[14]#gpio[15]#tx_clk#txd[0]#txd[1]#txd[2]#txd[3]#tx_ctl#rx_clk#rxd[0]#rxd[1]#rxd[2]#rxd[3]#rx_ctl#gpio[28]#gpio[29]#gpio[30]#gpio[31]#gpio[32]#gpio[33]#gpio[34]#gpio[35]#gpio[36]#gpio[37]#gpio[38]#gpio[39]#clk#cmd#data[0]#data[1]#data[2]#data[3]#cd#wp#tx#rx#gpio[50]#gpio[51]#mdc#mdio}  \
+    CONFIG.PCW_MIO_TREE_PERIPHERALS {ENET Reset#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#CAN 0#CAN 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#Enet 0#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#GPIO#SD 0#SD 0#SD 0#SD 0#SD 0#SD 0#SD 0#SD 0#UART 1#UART 1#GPIO#GPIO#Enet 0#Enet 0}  \
+    CONFIG.PCW_MIO_TREE_SIGNALS {reset#gpio[1]#gpio[2]#gpio[3]#gpio[4]#gpio[5]#gpio[6]#gpio[7]#gpio[8]#gpio[9]#gpio[10]#gpio[11]#gpio[12]#gpio[13]#rx#tx#tx_clk#txd[0]#txd[1]#txd[2]#txd[3]#tx_ctl#rx_clk#rxd[0]#rxd[1]#rxd[2]#rxd[3]#rx_ctl#gpio[28]#gpio[29]#gpio[30]#gpio[31]#gpio[32]#gpio[33]#gpio[34]#gpio[35]#gpio[36]#gpio[37]#gpio[38]#gpio[39]#clk#cmd#data[0]#data[1]#data[2]#data[3]#cd#wp#tx#rx#gpio[50]#gpio[51]#mdc#mdio}  \
 ]
 }
 

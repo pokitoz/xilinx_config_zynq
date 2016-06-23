@@ -144,6 +144,8 @@ done
 
 echo -e "$c_info Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)$c_default"
 echo -e "$c_info Use minicom or miniterm.py$c_default"
+echo -e "$c_info If you don't have ssh working: dpkg -i *.deb in Desktop/pkg$c_default"
+echo -e "$c_info You can type ssh root@10.42.0.2 (password root)$c_default"
 date
 
 trap : 0
