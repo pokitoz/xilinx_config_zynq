@@ -98,6 +98,8 @@ select opt in $OPTIONS_MENU; do
 			$build_dir_r/make_bootbin.sh $hdf_name_only
 		elif [ "$opt" = "Make_applications" ]; then
 			$dev_dir_r/make_applications.sh $hdf_name_only
+		elif [ "$opt" = "Send_applications" ]; then
+			$dev_dir_r/send_applications.sh $hdf_name_only
 		elif [ "$opt" = "Push_to_sd_card" ]; then
 			./copy_to_sd_card.sh $sdcard_abs
 		else
