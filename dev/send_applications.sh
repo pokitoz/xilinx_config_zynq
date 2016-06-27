@@ -28,7 +28,7 @@ echo -e "$c_good *** START `basename "$0"` *** $c_default"
 
 pushd $applications_dir_r
 
-	sshpass -p "1234" scp -r dma/ root@10.42.0.2:~/Desktop
+	sshpass -p "root" scp -r dma/ root@10.42.0.2:~/Desktop
 
 popd
 
