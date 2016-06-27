@@ -14,10 +14,10 @@
 #define MM2S_DMASR	0x04
 #define MM2S_DMASR_I	(MM2S_DMASR >> 2)
 //SA (CDMA Source Address Register - Offset 18h)
-//This register provides the source address for Simple DMA transfers by AXI CDMA. 
+//This register provides the source address for Simple DMA transfers by AXI CDMA.
 #define MM2S_SA	0x18
 #define MM2S_SA_I (MM2S_SA>>2)
-//MM2S_LENGTH (MM2S DMA Transfer Length Register — Offset 28h) 
+//MM2S_LENGTH (MM2S DMA Transfer Length Register — Offset 28h)
 //This register provides the number of bytes to read from system memory and transfer to MM2S AXI4-Stream
 #define MM2S_LENGTH	0x28
 #define MM2S_LENGTH_I	(MM2S_LENGTH>>2)
@@ -81,7 +81,7 @@ void pl_dma_halt(void* dma_address);
 void pl_dma_set_addresses(void* dma_address, unsigned int source_addr, unsigned int dest_addr);
 void pl_dma_set_length_master(void* dma_address, unsigned int dma_transfer_length);
 void pl_dma_set_length_slave(void* dma_address, unsigned int dma_transfer_length);
-void pl_dma_print_status(unsigned int status);
+//void pl_dma_print_status(unsigned int status);
 void pl_dma_start_channel(void* dma_address);
 void pl_dma_set_length(void* dma_address, unsigned int dma_transfer_length);
 void pl_dma_s2mm_status(unsigned int* dma_address);
