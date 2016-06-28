@@ -2,6 +2,33 @@
 #define __PL_DMA_API_H
 
 
+#if defined(__KERNEL__) || defined(MODULE)
+
+	#include <linux/module.h>
+	#include <linux/kernel.h>
+	#include <linux/types.h>		
+	#include <asm/io.h>
+	
+	#define io_write32_c(dest, src)   iowrite32(dest, src)  
+	#define io_read32_c(src)          ioread32(src)  
+	
+	#define PRINT_CUSTOM(format,arg...) printk(KERNEL_INFO format,##arg)
+
+#else
+	#include <stdio.h>
+	#include <stdint.h>
+	
+	#define CUSTOM_CAST(type, ptr)       ((type) (ptr))
+
+	#define io_write32_c(dest, src)     (*CUSTOM_CAST(volatile uint32_t *, (dest)) = (src))
+	#define io_read32_c(src)            (*CUSTOM_CAST(volatile uint32_t *, (src)))
+
+	#define PRINT_CUSTOM(format,arg...) printf(format,##arg)
+
+#endif
+
+
+
 // All registers are from
 //http://www.xilinx.com/support/documentation/ip_documentation/axi_dma/v7_1/pg021_axi_dma.pdf
 
@@ -73,6 +100,29 @@
 
 #define DMA_MASK_INTERRUPT 0xF001
 
+
+typedef struct pl_dma_dev_t{
+
+	void* addr;
+	unsigned int length;
+
+	unsigned int base_addr;
+	unsigned int high_addr;
+
+	unsigned int int_s2mm;
+	unsigned int int_mm2s;
+
+} pl_dma_dev;
+
+
+pl_dma_dev pl_dma_init(
+	unsigned int length,
+	unsigned int base_addr,
+	unsigned int high_addr,
+	unsigned int int_s2mm,
+	unsigned int int_mm2s
+);
+
 unsigned int pl_dma_get_reg(unsigned int* dma_address, int offset);
 void pl_dma_set_reg(unsigned int* dma_address, int offset, unsigned int value);
 
@@ -81,7 +131,7 @@ void pl_dma_halt(void* dma_address);
 void pl_dma_set_addresses(void* dma_address, unsigned int source_addr, unsigned int dest_addr);
 void pl_dma_set_length_master(void* dma_address, unsigned int dma_transfer_length);
 void pl_dma_set_length_slave(void* dma_address, unsigned int dma_transfer_length);
-//void pl_dma_print_status(unsigned int status);
+
 void pl_dma_start_channel(void* dma_address);
 void pl_dma_set_length(void* dma_address, unsigned int dma_transfer_length);
 void pl_dma_s2mm_status(unsigned int* dma_address);
