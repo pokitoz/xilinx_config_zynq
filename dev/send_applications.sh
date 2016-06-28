@@ -28,8 +28,10 @@ echo -e "$c_good *** START `basename "$0"` *** $c_default"
 
 pushd $applications_dir_r
 
-	sshpass -p "root" scp -r dma/ root@10.42.0.2:~/Desktop
-
+	echo -e "$c_info Sending dma/ folder to $sshcommand:~/Desktop $c_default"
+	sshpass -p "$env_sshpassword" scp -r dma/ root@10.42.0.2:~/Desktop
+	echo -e "$c_info Sending irq_interrupt/ folder to $sshcommand:~/Desktop $c_default"
+	sshpass -p "$env_sshpassword" scp -r irq_interrupt/ $sshcommand:~/Desktop
 popd
 
 

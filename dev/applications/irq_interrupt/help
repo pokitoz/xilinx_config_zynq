@@ -1,0 +1,6 @@
+static irqreturn_t xilaxitimer_isr(int irq,void*dev_id);
+
+request_irq(91, xilaxitimer_isr, 0, "xilaxitimer", NULL)
+
+free_irq(91, NULL);
+
