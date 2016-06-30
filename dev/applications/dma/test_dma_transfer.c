@@ -22,52 +22,26 @@
 #define SOURCE_MEM_ADDRESS  	RESERVED_BUFFER_PHYS_ADDR
 #define DEST_MEM_ADDRESS 		(RESERVED_BUFFER_PHYS_ADDR+0x00100000)
 
-#define PRINT_NUMBER_BYTE_PER_LINE 8
-
-void print_buffer(void* virtual_address, int size);
-void init_source_buffer(void* virtual_source_address, int size);
-
-void print_buffer(void* dma_address, int size) {
-  printf("\n");
-
-  unsigned char* buffer = dma_address;
-  int i = 1;
-  for (; i <= size; i++) {
-      printf("%02x ", buffer[i-1]);
-  if(i % PRINT_NUMBER_BYTE_PER_LINE == 0){
-  	printf("\n");
-  }
-  }
-  printf("\n");
-}
-
-void init_source_buffer(void* dma_source_address, int size) {
-
-  unsigned char* buffer = (unsigned char*) dma_source_address;
-  int i = 0;
-  for (; i <= size; i++) {
-    buffer[i] = i;
-  }
-}
 
 
-int main() {
+
+
+int main(void) {
 
   int fp_mem = open("/dev/mem", O_RDWR | O_SYNC);
   void* virtual_pldma_address = mmap(NULL, PAGE_SIZE , PROT_READ | PROT_WRITE, MAP_SHARED, fp_mem, XPAR_AXI_DMA_0_BASEADDR);
   void* virtual_source_address  = mmap(NULL, PAGE_SIZE , PROT_READ | PROT_WRITE, MAP_SHARED, fp_mem, SOURCE_MEM_ADDRESS);
   void* virtual_destination_address = mmap(NULL, PAGE_SIZE , PROT_READ | PROT_WRITE, MAP_SHARED, fp_mem, DEST_MEM_ADDRESS);
 
-  init_source_buffer(virtual_source_address, DATA_TRANSFER_LENGTH);
+  pl_dma_init_buffer(virtual_source_address, DATA_TRANSFER_LENGTH);
 
-  printf("Set dest buffer to 0");
+  printf("Set dest buffer to 0\n");
   memset(virtual_destination_address, 0, DATA_TRANSFER_LENGTH);
 
-
   printf("Source\n");
-  print_buffer(virtual_source_address, DATA_TRANSFER_LENGTH);
+  pl_dma_print_buffer(virtual_source_address, DATA_TRANSFER_LENGTH);
   printf("Dest\n");
-  print_buffer(virtual_destination_address, DATA_TRANSFER_LENGTH);
+  pl_dma_print_buffer(virtual_destination_address, DATA_TRANSFER_LENGTH);
 
   pl_dma_reset(virtual_pldma_address);
   pl_dma_halt(virtual_pldma_address);
@@ -83,7 +57,7 @@ int main() {
   pl_dma_s2mm_sync(virtual_pldma_address);
 
   printf("New Dest\n");
-  print_buffer(virtual_destination_address, DATA_TRANSFER_LENGTH);
+  pl_dma_print_buffer(virtual_destination_address, DATA_TRANSFER_LENGTH);
 
 
   pl_dma_s2mm_status(virtual_pldma_address);

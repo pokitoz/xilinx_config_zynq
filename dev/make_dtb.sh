@@ -2,18 +2,15 @@
 
 set -e
 
+# make sure to be in the same directory as this script #########################
+current_script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
 if [ -z ${setup_env+x} ]; then
 	echo -e "$c_info Sourcing setup_env.sh.. $c_default"
 	source ../setup_env.sh
 fi
 
-# make sure to be in the same directory as this script #########################
-script_dir_abs=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-cd "${script_dir_abs}"
-
-
-
-pushd $dev_dir_r
+pushd "${current_script_dir}"
 
 
 

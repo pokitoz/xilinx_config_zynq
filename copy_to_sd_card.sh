@@ -66,12 +66,23 @@ set -e
 	#Copy files in rootfs
 #
 
+	sudo mkdir -p "$media_ext4/root/Desktop"
+	sudo rm -rf "$media_ext4/root/Desktop/*"
+
+
 
 	pushd $applications_dir_r
+		#shopt -s extglob
+		#shopt -u extglob
 		for d in * ; do
 		    if [ -d $d ]; then
-				echo -e "$c_info Copying $d to "$media_ext4/root/Desktop/$d" $c_default"
-				sudo cp -r "./$d" "$media_ext4/root/Desktop/"
+				ommit="make_*.sh *.pdf *.o ./old *~ .* *.o" 
+				echo -e "$c_info Copying $d to \"$media_ext4/root/Desktop/$d\" ommiting $ommit . $c_default"
+				#sudo cp -rv "!(*.sh)" "./$d" "$media_ext4/root/Desktop/"
+				sudo rsync -rv --exclude 'make_*.sh' "./$d" "$media_ext4/root/Desktop/"
+				#Exclude make.sh in the copy
+				#cp -r !(make.sh) ./directory
+
 			fi
 		done
 

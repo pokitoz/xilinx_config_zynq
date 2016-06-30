@@ -36,7 +36,7 @@ export dev_dir="dev"
 export linux_dir="linux"
 export build_dir="build"
 export preset_dir="preset"
-
+export results_dir="results"
 
 
 #export kernel_dir="linux-xlnx-official"
@@ -50,7 +50,7 @@ export build_dir_r="$PWD/$build_dir"
 export dev_dir_r="$PWD/$dev_dir"
 export linux_dir_r="$PWD/$linux_dir"
 export kernel_dir_r="$linux_dir_r/$kernel_dir"
-
+export results_dir_r="$PWD/$results_dir"
 
 export projects_dir_r="$PWD/$projects_dir"
 export applications_dir_r="$dev_dir_r/$applications_dir"
@@ -77,7 +77,7 @@ export CROSS_COMPILE=arm-xilinx-linux-gnueabi-
 echo -e "\e[34m Set CROSS_COMPILE=$CROSS_COMPILE\e[39m"
 
 #OPTIONS MENU MAKE ALL
-export OPTIONS_MENU="Make_all Clean_build Make_kernel Make_Uboot Make_dtb Make_fsbl Make_bootbin Make_applications Send_applications Push_to_sd_card Quit"
+export OPTIONS_MENU="Make_all Clean_build Make_kernel Make_Uboot Make_dtb Make_fsbl Make_bootbin Make_applications Send_applications Push_to_sd_card Get_Results Quit"
 export OPTIONS_MENU_KERNEL="Use_default_config Use_custom_config Quit"
 
 

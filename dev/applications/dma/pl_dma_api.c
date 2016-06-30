@@ -1,5 +1,21 @@
 #include "pl_dma_api.h"
-#include <stdio.h>
+
+/*
+#if defined(KERNEL_MODULE_COMPILATION)
+	#include <linux/module.h>
+	#include <linux/kernel.h>
+	#include <linux/types.h>
+	#include <linux/printk.h>
+	#include <linux/version.h>
+	#include <asm/io.h>
+	
+#elif defined(APPLICATION_COMPILATION)
+	#include <stdio.h>
+	#include <stdint.h>
+
+#endif
+
+*/
 
 
 static void pl_dma_print_status(unsigned int status);
@@ -21,14 +37,14 @@ unsigned int pl_dma_get_reg(unsigned int* dma_address, int offset) {
 
 
 
-pl_dma_dev pl_dma_init(	unsigned int length,
+pl_dma_dev_t pl_dma_init(	unsigned int length,
 						unsigned int base_addr,
 						unsigned int high_addr,
 						unsigned int int_s2mm,
 						unsigned int int_mm2s){
 
 
-	pl_dma_dev dev;
+	pl_dma_dev_t dev;
 	dev.length = length;
 	dev.base_addr = base_addr;
 	dev.high_addr = high_addr;
@@ -199,3 +215,29 @@ void pl_dma_mm2s_status(unsigned int* dma_address) {
 	PRINT_CUSTOM(" MM2S status reg :: 0x%08x :: 0x%02x", status, MM2S_DMASR);
 	pl_dma_print_status(status);
 }
+
+
+
+void pl_dma_print_buffer(void* buffer_address, int size) {
+  PRINT_CUSTOM("\n");
+
+  unsigned char* buffer = (unsigned char*) buffer_address;
+  int i = 1;
+  for (; i <= size; i++) {
+      PRINT_CUSTOM("%02x ", buffer[i-1]);
+  if(i % PRINT_NUMBER_BYTE_PER_LINE == 0){
+  	PRINT_CUSTOM("\n");
+  }
+  }
+  PRINT_CUSTOM("\n");
+}
+
+void pl_dma_init_buffer(void* buffer_address, int size) {
+
+  unsigned char* buffer = (unsigned char*) buffer_address;
+  int i = 0;
+  for (; i <= size; i++) {
+    buffer[i] = (unsigned char) i;
+  }
+}
+

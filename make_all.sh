@@ -102,6 +102,8 @@ select opt in $OPTIONS_MENU; do
 			$dev_dir_r/send_applications.sh $hdf_name_only
 		elif [ "$opt" = "Push_to_sd_card" ]; then
 			./copy_to_sd_card.sh $sdcard_abs
+		elif [ "$opt" = "Get_Results" ]; then
+			./get_results.sh
 		else
 		 echo "Bad option"
 		fi

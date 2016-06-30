@@ -23,26 +23,13 @@ trap 'abort' 0
 
 echo -e "$c_good *** START `basename "$0"` *** $c_default"
 
-pushd $applications_dir_r
-	for d in * ; do
+mkdir -p $results_dir_r
 
-	    if [ -d "$d" ]; then
-			pushd "$d/"
+pushd $results_dir_r
 
-				mkdir -p "includes"
-				cp -f "$dev_dir_r/fsbl_$1/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/xparameters.h ./includes/
-				cp -f "$dev_dir_r/fsbl_$1/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/xparameters_ps.h ./includes/
+	echo -e "$c_info Getting bmp $sshcommand:~/Desktop/convertor_interface/out.bmp $c_default"
+	sshpass -p "$env_sshpassword" scp -r root@10.42.0.2:~/Desktop/convertor_interface/*.bmp ./
 
-
-				if [ -f "make_$d.sh" ]; then
-					echo -e "$c_info Changing chmod of the script $d $c_default"
-					chmod +x ./"make_$d.sh"
-					echo -e "$c_info Compiling $d $c_default"
-					./"make_$d.sh"
-				fi
-			popd
-		fi
-	done
 popd
 
 

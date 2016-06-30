@@ -2,32 +2,39 @@
 #define __PL_DMA_API_H
 
 
-#if defined(__KERNEL__) || defined(MODULE)
+
+#if defined(__KERNEL__)
 
 	#include <linux/module.h>
 	#include <linux/kernel.h>
-	#include <linux/types.h>		
+	#include <linux/types.h>	
+	#include <linux/version.h>	
+	#include <linux/printk.h>
 	#include <asm/io.h>
 	
-	#define io_write32_c(dest, src)   iowrite32(dest, src)  
+	#define io_write32_c(dest, src)   iowrite32(src, dest)  
 	#define io_read32_c(src)          ioread32(src)  
 	
-	#define PRINT_CUSTOM(format,arg...) printk(KERNEL_INFO format,##arg)
+	#define PRINT_CUSTOM printk
+//printk(format,##arg)
 
 #else
+
 	#include <stdio.h>
 	#include <stdint.h>
-	
+
 	#define CUSTOM_CAST(type, ptr)       ((type) (ptr))
 
 	#define io_write32_c(dest, src)     (*CUSTOM_CAST(volatile uint32_t *, (dest)) = (src))
 	#define io_read32_c(src)            (*CUSTOM_CAST(volatile uint32_t *, (src)))
 
-	#define PRINT_CUSTOM(format,arg...) printf(format,##arg)
+//	#define PRINT_CUSTOM ( format,arg...) printf(format,##arg)
+	#define PRINT_CUSTOM printf
 
 #endif
 
 
+#define PRINT_NUMBER_BYTE_PER_LINE 8
 
 // All registers are from
 //http://www.xilinx.com/support/documentation/ip_documentation/axi_dma/v7_1/pg021_axi_dma.pdf
@@ -112,10 +119,10 @@ typedef struct pl_dma_dev_t{
 	unsigned int int_s2mm;
 	unsigned int int_mm2s;
 
-} pl_dma_dev;
+} pl_dma_dev_t;
 
 
-pl_dma_dev pl_dma_init(
+pl_dma_dev_t pl_dma_init(
 	unsigned int length,
 	unsigned int base_addr,
 	unsigned int high_addr,
@@ -140,5 +147,8 @@ void pl_dma_mm2s_status(unsigned int* dma_address);
 int pl_dma_mm2s_sync(unsigned int* dma_address);
 int pl_dma_s2mm_sync(unsigned int* dma_address);
 
+
+void pl_dma_print_buffer(void* virtual_address, int size);
+void pl_dma_init_buffer(void* virtual_address, int size);
 
 #endif
