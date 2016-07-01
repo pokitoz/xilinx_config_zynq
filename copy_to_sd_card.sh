@@ -64,7 +64,6 @@ set -e
     sudo mkdir -p "$media_ext4"
     sudo mount -t ext4 "${sdcard_abs}$sdcard_dev_ext3_id" "$media_ext4"
 	#Copy files in rootfs
-#
 
 	sudo mkdir -p "$media_ext4/root/Desktop"
 	sudo rm -rf "$media_ext4/root/Desktop/*"

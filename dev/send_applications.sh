@@ -39,6 +39,8 @@ pushd $applications_dir_r
 	echo -e "$c_info Sending yuv_generator/ folder to $sshcommand:~/Desktop $c_default"
 	sshpass -p "$env_sshpassword" scp -r yuv_generator/ $sshcommand:~/Desktop
 
+#	rsync -av --exclude '*.svn' user@server:/my/dir .
+
 
 	sshpass -p "$env_sshpassword" scp -r *.sh $sshcommand:~/Desktop
 

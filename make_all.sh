@@ -13,7 +13,29 @@ cd "${script_dir_abs}"
 
 
 
+# trap ctrl-c and call ctrl_c()
+trap ctrl_c INT
+
+
 # Functions definitions ########################################################
+
+print_info(){
+
+	echo -e "$c_info Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)$c_default"
+	echo -e "$c_info Use 'minicom -c on' or 'miniterm.py' to use the UART-USB$c_default"
+	echo -e "$c_info You can type ssh $sshcommand (password root) $c_default"
+	echo -e "$c_info If you don't have ssh working: dpkg -i *.deb in Desktop/pkg $c_default"
+	date
+}
+
+function ctrl_c() {
+	echo -e ""
+	print_info
+  	echo -e "$c_good \nExited by user with CTRL+C $c_default"
+	echo -e "$c_good *** DONE `basename "$0"` *** $c_default"
+	trap : 0
+	exit 0
+}
 
 abort() {
 	echo -e "$c_error Error in `basename "$0"`$c_default"
@@ -43,6 +65,9 @@ if [ -z "$1" ]; then
 fi
 
 
+
+$preset_dir_r/make_preset.sh
+
 hdf_location="$1"
 sdcard_abs="$2"
 
@@ -56,7 +81,6 @@ sdcard_abs="$2"
 
 abs_path_hdf=`readlink -f $hdf_location`
 hdf_name_only=`basename "$abs_path_hdf" .hdf`
-
 
 echo -e "$c_orange MENU DE LA MUERTE $c_default"
 
@@ -109,48 +133,8 @@ select opt in $OPTIONS_MENU; do
 		fi
 done
 
-#if [ "$3" = "y" ]
-#then
-#	$linux_dir_r/make_kernel.sh
-#	$linux_dir_r/make_uboot.sh
-#	$dev_dir_r/make_dtb.sh $abs_path_hdf
-#	$dev_dir_r/make_fsbl.sh $abs_path_hdf
-#	$build_dir_r/make_bootbin.sh $hdf_name_only
-#else
-#	asking_to_do "build kernel" $linux_dir_r/make_kernel.sh
-#	asking_to_do "build uboot" $linux_dir_r/make_uboot.sh
-#	asking_to_do "build dtb" "$dev_dir_r/make_dtb.sh $abs_path_hdf"
-#	asking_to_do "make fsbl" "$dev_dir_r/make_fsbl.sh $abs_path_hdf"
-#	asking_to_do "make bootbin" "$build_dir_r/make_bootbin.sh $hdf_name_only"
-#fi
-
-#$linux_dir_r/make_kernel.sh
-#$linux_dir_r/make_uboot.sh
-#$dev_dir_r/make_dtb.sh $abs_path_hdf
-#$dev_dir_r/make_fsbl.sh $abs_path_hdf
-#$build_dir_r/make_bootbin.sh $hdf_name_only
-
-
-
-
-
-
-
-#if [ "$3" = "y" ]
-#then
-#	./copy_to_sd_card.sh $sdcard_abs
-#else
-#	asking_to_do "copy to sd card" "./copy_to_sd_card.sh $sdcard_abs"
-#fi
-#./copy_to_sd_card.sh $sdcard_abs
-
-
-
-echo -e "$c_info Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)$c_default"
-echo -e "$c_info Use minicom or miniterm.py$c_default"
-echo -e "$c_info If you don't have ssh working: dpkg -i *.deb in Desktop/pkg$c_default"
-echo -e "$c_info You can type ssh root@10.42.0.2 (password root)$c_default"
-date
 
 trap : 0
+print_info
+echo -e "$c_good \nExited by user $c_default"
 echo -e "$c_good *** DONE `basename "$0"` *** $c_default"

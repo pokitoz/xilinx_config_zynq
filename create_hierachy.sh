@@ -91,15 +91,20 @@ sudo chmod +x ./clean_files.sh
 sudo chmod +x ./copy_to_sd_card.sh
 sudo chmod +x ./make_all.sh
 sudo chmod +x ./part_sd_card.sh
-sudo chmod +x ./sd_write_image.sh
 sudo chmod +x ./setup_env.sh
+sudo chmod +x ./get_results.sh
 
 sudo chmod +x $build_dir_r/make_bootbin.sh
+
 sudo chmod +x $dev_dir_r/make_dtb.sh
 sudo chmod +x $dev_dir_r/make_applications.sh
 sudo chmod +x $dev_dir_r/make_fsbl.sh
+sudo chmod +x $dev_dir_r/make_applications.sh
+
 sudo chmod +x $linux_dir_r/make_kernel.sh
 sudo chmod +x $linux_dir_r/make_uboot.sh
+
+sudo chmod +x $preset_dir_r/make_preset.sh
 
 trap : 0
 echo -e "$c_good *** DONE `basename "$0"` *** $c_default"
