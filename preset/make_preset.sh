@@ -30,7 +30,7 @@ iface atml0 inet dhcp
 
 # Wired or wireless interfaces
 iface eth0 inet static
-address 10.42.0.2
+address $sshaddress
 netmask 255.255.255.0
 network 10.42.0.0
 broadcast 10.42.0.255
@@ -57,13 +57,13 @@ cat <<EOF > ./rc.local
 
 ifup eth0
 
-echo "Changing root password to root"
 
 
 sudo date --set "25 Sep 2020 15:00:00"
 
 # set root password
-echo -e "root\nroot\n" | passwd root
+echo "Changing root password to $env_sshpassword"
+echo -e "$env_sshpassword\n$env_sshpassword\n" | passwd root
 
 # allow root SSH login with password
 perl -pi -e 's/^(PermitRootLogin) without-password$/$1 yes/g' /etc/ssh/sshd_config

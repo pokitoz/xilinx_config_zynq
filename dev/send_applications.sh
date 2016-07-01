@@ -23,6 +23,8 @@ trap 'abort' 0
 
 echo -e "$c_good *** START `basename "$0"` *** $c_default"
 
+
+echo -e "$c_info $sshcommand with password $env_sshpassword $c_default"
 pushd $applications_dir_r
 
 

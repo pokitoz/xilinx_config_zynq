@@ -30,6 +30,7 @@ print_info(){
 	echo -e "$c_info Use 'minicom -c on' or 'miniterm.py' to use the UART-USB$c_default"
 	echo -e "$c_info You can type ssh $sshcommand (password root) $c_default"
 	echo -e "$c_info If you don't have ssh working: dpkg -i *.deb in Desktop/pkg $c_default"
+	echo -e "$c_info \t Or you can type sudo apt-get install openssh-server $c_default"	
 	date
 }
 

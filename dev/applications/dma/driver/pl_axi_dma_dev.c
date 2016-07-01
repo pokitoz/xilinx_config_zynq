@@ -161,10 +161,10 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
 	pl_dma_start_channel(axi_dma_interface->pl_dma_dev.addr);
 
 	pl_dma_set_length(axi_dma_interface->pl_dma_dev.addr, DATA_TRANSFER_LENGTH);
-/*
+
 	pl_dma_mm2s_sync(axi_dma_interface->pl_dma_dev.addr);
 	pl_dma_s2mm_sync(axi_dma_interface->pl_dma_dev.addr);
-*/
+
 ////////////////////////////////////////////////////////////////////////////////
 	//iounmap(axi_dma_interface->pl_dma_dev.addr);
 

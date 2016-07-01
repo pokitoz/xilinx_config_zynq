@@ -1,3 +1,16 @@
+dma-channel@40400000 {
+		compatible = "xlnx,axi-dma-mm2s-channel";
+		interrupts = < 0 59 4 >;
+		xlnx,datawidth = <0x40>;
+	} ;
+	dma-channel@40400030 {
+		compatible = "xlnx,axi-dma-s2mm-channel";
+		interrupts = < 0 58 4 >;
+		xlnx,datawidth = <0x40>;
+} ;
+
+
+
 			dmatest_0: dmatest@0 {
                         compatible ="xlnx,axi-dma-test-1.00.a";
                         dmas = <&axi_dma_0 0
