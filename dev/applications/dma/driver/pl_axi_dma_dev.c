@@ -72,10 +72,9 @@ static void clear_buffer(void) {
 	for(k = 0; k < RESERVED_BUFFER_NUMBER; k++){
 	
 		size_t i = 0;
-		uint8_t value = k;
 		// Byte to byte initialization
 		do {
-		    *virt = i;
+		    *virt = 0xFF;
 		    virt += 1;
 		    i += 1;
 		} while (i < BUFFER_LENGTH_1MB);
@@ -94,7 +93,7 @@ static int copy_to_user_frame_buffer(char __user *buf, phys_addr_t address, unsi
             printk("copy to user fail \n");
             error = -EFAULT;
      }
-		
+
 	iounmap(virt);
     
     return error;
@@ -160,7 +159,7 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
 
 	pl_dma_start_channel(axi_dma_interface->pl_dma_dev.addr);
 
-	pl_dma_set_length(axi_dma_interface->pl_dma_dev.addr, DATA_TRANSFER_LENGTH);
+	pl_dma_set_length(axi_dma_interface->pl_dma_dev.addr, axi_dma_interface->pl_dma_dev.length);
 
 	pl_dma_mm2s_sync(axi_dma_interface->pl_dma_dev.addr);
 	pl_dma_s2mm_sync(axi_dma_interface->pl_dma_dev.addr);
@@ -173,7 +172,7 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
     // copy to user  
 	
 
-    retval = copy_to_user_frame_buffer(buf, DEST_MEM_ADDRESS, DATA_TRANSFER_LENGTH);
+    retval = copy_to_user_frame_buffer(buf, DEST_MEM_ADDRESS, axi_dma_interface->pl_dma_dev.length);
     if (retval) {
         printk("axi_dma_interface_read: Fail copy to user\n");
         goto fail;
@@ -189,19 +188,34 @@ ssize_t axi_dma_interface_write(struct file *filp, const char __user *buf, size_
 
 	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write\n");
     axi_dma_interface_dev_t* axi_dma_interface = filp->private_data;
-    uint32_t frame_dimensions = 0;
     ssize_t retval = 0;
 
     if (down_interruptible(&axi_dma_interface->sem)) {
         return -ERESTARTSYS;
     }
 
-    if (copy_from_user(&frame_dimensions, buf, count)) {
+	pl_dma_dev_t pl_dma_dev_input;
+    if (copy_from_user(&pl_dma_dev_input, buf, count)) {
         retval = -EFAULT;
         goto fail;
     }
-    retval = count;
 
+
+	axi_dma_interface->pl_dma_dev.length = pl_dma_dev_input.length;
+	axi_dma_interface->pl_dma_dev.base_addr = pl_dma_dev_input.base_addr;
+	axi_dma_interface->pl_dma_dev.high_addr = pl_dma_dev_input.high_addr;
+	
+	axi_dma_interface_dev_end(axi_dma_interface);
+
+	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write change length: %u\n", pl_dma_dev_input.length);
+	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
+	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
+
+	resource_size_t offset = axi_dma_interface->pl_dma_dev.base_addr;
+	unsigned long size = axi_dma_interface->pl_dma_dev.high_addr - axi_dma_interface->pl_dma_dev.base_addr + 1;
+	axi_dma_interface->pl_dma_dev.addr = ioremap_nocache(offset, size);
+
+    retval = count;
    
 fail:
     up(&axi_dma_interface->sem);
@@ -226,12 +240,11 @@ static void axi_dma_interface_dev_init(axi_dma_interface_dev_t* driver_dev) {
 										);
 
 	// Map the physical address of the module to virtual space :)
-	//off_t axi_dma_address = (off_t) driver_dev->pl_dma_dev.base_addr;
-    //size_t mapping_axi_span = (size_t) (((uintptr_t) driver_dev->pl_dma_dev.high_addr) - ((uintptr_t) driver_dev->pl_dma_dev.base_addr) + 1);    
 
-	driver_dev->pl_dma_dev.addr = ioremap_nocache(XPAR_AXI_DMA_0_BASEADDR, XPAR_AXI_DMA_0_HIGHADDR - XPAR_AXI_DMA_0_BASEADDR + 1);
-	//driver_dev->pl_dma_dev.addr = ioremap_nocache(axi_dma_address, mapping_axi_span);
-
+	//void __iomem * ioremap_nocache (resource_size_t offset, unsigned long size);
+	resource_size_t offset = driver_dev->pl_dma_dev.base_addr;
+	unsigned long size = driver_dev->pl_dma_dev.high_addr - driver_dev->pl_dma_dev.base_addr + 1;
+	driver_dev->pl_dma_dev.addr = ioremap_nocache(offset, size);
 	printk(KERN_INFO "axi_dma_interface_dev_init: ioremap\n");
 	
 	//axi_dma_init_interrupt(driver_dev->pl_dma_dev.int_s2mm, driver_dev->pl_dma_dev.int_mm2s);

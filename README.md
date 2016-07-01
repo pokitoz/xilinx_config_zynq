@@ -8,24 +8,23 @@ Application: <elf>
 
 1. Copy the contents of this directory to an SD card
 2. Set boot mode to SD
-     Jumper J1 NC
-     Jumper J2 1-2
+   - Jumper J1 non connected
+   - Jumper J2 connected
 3. Insert SD card and turn board on
 
-The DONE LED (red led) should be on
-
+The DONE LED (red led) should be on: meaning the FPGA (PL) has been configured properly using the bitstream
 
 
 Those scripts generates a complete system for a **Myir** board.
-- Linux
-- Config of the FPGA
+The system contains:
+   - Linux Kernel
+   - Config of the FPGA (bitstream)
 
 
 *Please download:*
 	https://www.dropbox.com/s/0zn56diit0mqh2c/xilinx_source.tar.gz
 
 and put it to the begining of the folder hierarchy.
-
 
 #Run *./create_hierarchy.sh*
 - Creates all the folders
@@ -72,13 +71,11 @@ and put it to the begining of the folder hierarchy.
 #Source ./setup_env.sh
 To have all the necessary commands/variables
 
-
 #./part_sd_card.sh <SD CARD ABSOLUTE PATH> <1 or 0>
 This script will create the partitions needed to run linux on the SD card
 You need to specify the path of the SD card: /dev/sdc
 - This script will create a partition vfat32 (named boot) and a partition ext4 (named rootfs)
 - If the second argument is 1, it calls ./sd_write_image.sh <SD CARD ABSOLUTE PATH>
-
 
 #./sd_write_image.sh <SD CARD ABSOLUTE PATH>
 This script will copy the linux image located in ./filesystem/xillinux-1.3.img.gz to the SD card specified.
@@ -94,10 +91,6 @@ Copy all necessary files to the SD card.
 
 
 
-
-
-
-
-Kernel:
-https://github.com/Digilent/linux-Digilent-Dev
-https://github.com/Xilinx/linux-xlnx.git
+Kernel images (pick one, or use the one given in the dropbox link):
+- https://github.com/Digilent/linux-Digilent-Dev
+- https://github.com/Xilinx/linux-xlnx.git
