@@ -44,8 +44,9 @@ build/*
 
 results/
 xillinx_source/
-preset/rc.local
-preset/etc_network_interfaces
+
+*rc.local
+*etc_network_interfaces
 
 # Dev directory
 dev/*
