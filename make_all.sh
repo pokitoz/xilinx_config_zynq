@@ -1,6 +1,9 @@
 #!/bin/bash
 
+#Trap in case of error
 set -e
+#Print all commands executed.. Only for debug
+#set -o verbose
 
 if [ -z ${setup_env+x} ]; then
 	echo -e "$c_info Sourcing setup_env.sh.. $c_default"
@@ -20,7 +23,9 @@ trap ctrl_c INT
 # Functions definitions ########################################################
 
 print_info(){
-
+	echo -e ""
+	echo -e ""
+	
 	echo -e "$c_info Check ./build/make_bootbin.sh to get the baud rate for the UART (should be 115200)$c_default"
 	echo -e "$c_info Use 'minicom -c on' or 'miniterm.py' to use the UART-USB$c_default"
 	echo -e "$c_info You can type ssh $sshcommand (password root) $c_default"
@@ -29,7 +34,6 @@ print_info(){
 }
 
 function ctrl_c() {
-	echo -e ""
 	print_info
   	echo -e "$c_good \nExited by user with CTRL+C $c_default"
 	echo -e "$c_good *** DONE `basename "$0"` *** $c_default"
@@ -41,6 +45,33 @@ abort() {
 	echo -e "$c_error Error in `basename "$0"`$c_default"
     exit 1
 }
+
+
+function hcenter {
+
+  text="$1"
+
+  cols=`tput cols`
+
+  IFS=$'\n'$'\r'
+  for line in $(echo -e $text); do
+
+    line_length=`echo $line| wc -c`
+    half_of_line_length=`expr $line_length / 2`
+    center=`expr \( $cols / 2 \) - $half_of_line_length`
+
+    spaces=""
+    for ((i=0; i < $center; i++)) {
+      spaces="$spaces "
+    }
+
+    echo -e "$spaces$line"
+
+  done
+
+}
+
+
 
 function asking_to_do {
 	ACTION=$1
@@ -82,9 +113,27 @@ sdcard_abs="$2"
 abs_path_hdf=`readlink -f $hdf_location`
 hdf_name_only=`basename "$abs_path_hdf" .hdf`
 
-echo -e "$c_orange MENU DE LA MUERTE $c_default"
+#echo -e ""
+#echo -e "$c_orange \t\t\t --------------------- $c_default"
+#echo -e "$c_orange \t\t\t|    Menu MakeAll     |$c_default"
+#echo -e "$c_orange \t\t\t --------------------- $c_default"
+
+
+old_IFS=$IFS
+echo -e ""
+hcenter "$c_orange --------------------- $c_default"
+hcenter "$c_orange Menu_MakeAll$c_default"
+hcenter "$c_orange --------------------- $c_default"
+echo -e ""
+echo -e ""
+
+
+PS3="Menu #?> "
+IFS=$old_IFS
+
 
 select opt in $OPTIONS_MENU; do
+		
 		if [ "$opt" = "Quit" ]; then
 		 echo "Exit menu"
 		 break
@@ -131,6 +180,8 @@ select opt in $OPTIONS_MENU; do
 		else
 		 echo "Bad option"
 		fi
+
+		echo -e ""
 done
 
 
