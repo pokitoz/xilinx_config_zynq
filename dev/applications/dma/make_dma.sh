@@ -23,6 +23,7 @@ pushd "${current_script_dir}"
 	
 	#Make application
 	make
+	make clean
 	
 popd
 

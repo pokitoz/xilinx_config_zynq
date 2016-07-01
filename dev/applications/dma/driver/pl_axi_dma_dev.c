@@ -29,9 +29,10 @@
 
  
 #define SOURCE_MEM_ADDRESS	RESERVED_BUFFER_PHYS_ADDR
-#define DEST_MEM_ADDRESS 	(RESERVED_BUFFER_PHYS_ADDR + 0x00100000)
+#define DEST_MEM_ADDRESS 	(RESERVED_BUFFER_PHYS_ADDR + BUFFER_LENGTH_1MB)
 
 #define DATA_TRANSFER_LENGTH (32)
+
 
 static void __exit axi_dma_exit(void);
 static int __init axi_dma_init(void);
@@ -74,7 +75,7 @@ static void clear_buffer(void) {
 		uint8_t value = k;
 		// Byte to byte initialization
 		do {
-		    *virt = value;
+		    *virt = i;
 		    virt += 1;
 		    i += 1;
 		} while (i < BUFFER_LENGTH_1MB);
@@ -127,21 +128,22 @@ int axi_dma_interface_release(struct inode *inode, struct file *filp) {
 
 ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count, loff_t *f_pos) {
 
+
 	// Get the structure of the interface from the device file
     if(filp == NULL){
         printk("axi_dma_interface_read: axi_dma_interface file NULL\n");
-		goto fail;
+		return -ERESTARTSYS;
     }
 
     axi_dma_interface_dev_t* axi_dma_interface = filp->private_data;
     if(axi_dma_interface == NULL){
         printk("axi_dma_interface_read: axi_dma_interface_dev_t NULL\n");
-		goto fail;
+		return -ERESTARTSYS;
     }
 
     ssize_t retval = 0;
 
-    if (down_interruptible(&axi_dma_interface->sem)) {
+	if (down_interruptible(&axi_dma_interface->sem)) {
         return -ERESTARTSYS;
     }
 
@@ -159,10 +161,10 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
 	pl_dma_start_channel(axi_dma_interface->pl_dma_dev.addr);
 
 	pl_dma_set_length(axi_dma_interface->pl_dma_dev.addr, DATA_TRANSFER_LENGTH);
-
+/*
 	pl_dma_mm2s_sync(axi_dma_interface->pl_dma_dev.addr);
 	pl_dma_s2mm_sync(axi_dma_interface->pl_dma_dev.addr);
-
+*/
 ////////////////////////////////////////////////////////////////////////////////
 	//iounmap(axi_dma_interface->pl_dma_dev.addr);
 

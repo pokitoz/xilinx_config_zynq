@@ -1,22 +1,5 @@
 #include "pl_dma_api.h"
 
-/*
-#if defined(KERNEL_MODULE_COMPILATION)
-	#include <linux/module.h>
-	#include <linux/kernel.h>
-	#include <linux/types.h>
-	#include <linux/printk.h>
-	#include <linux/version.h>
-	#include <asm/io.h>
-	
-#elif defined(APPLICATION_COMPILATION)
-	#include <stdio.h>
-	#include <stdint.h>
-
-#endif
-
-*/
-
 
 static void pl_dma_print_status(unsigned int status);
 
