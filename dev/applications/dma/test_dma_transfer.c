@@ -23,9 +23,6 @@
 #define DEST_MEM_ADDRESS 		(RESERVED_BUFFER_PHYS_ADDR+0x00100000)
 
 
-
-
-
 int main(void) {
 
   int fp_mem = open("/dev/mem", O_RDWR | O_SYNC);
@@ -53,15 +50,15 @@ int main(void) {
   pl_dma_set_length(virtual_pldma_address, DATA_TRANSFER_LENGTH);
 
   printf("Waiting for synchronization\n");
-  pl_dma_mm2s_sync(virtual_pldma_address);
-  pl_dma_s2mm_sync(virtual_pldma_address);
+  pl_dma_sync_mm2s(virtual_pldma_address);
+  pl_dma_sync_s2mm(virtual_pldma_address);
 
   printf("New Dest\n");
   pl_dma_print_buffer(virtual_destination_address, DATA_TRANSFER_LENGTH);
 
 
-  pl_dma_s2mm_status(virtual_pldma_address);
-  pl_dma_mm2s_status(virtual_pldma_address);
+  pl_dma_status_s2mm(virtual_pldma_address);
+  pl_dma_status_mm2s(virtual_pldma_address);
 
 	return 0;
 }

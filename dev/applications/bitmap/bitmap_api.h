@@ -40,11 +40,7 @@
 #define _ypixelpermeter 0x130B //2835 , 72 DPI
 #define pixel 0xFF
 
-#define _planes 1
-#define _compression 0
-#define _xpixelpermeter 0x130B //2835 , 72 DPI
-#define _ypixelpermeter 0x130B //2835 , 72 DPI
-#define pixel 0xFF
+
 #pragma pack(push,1)
 
 

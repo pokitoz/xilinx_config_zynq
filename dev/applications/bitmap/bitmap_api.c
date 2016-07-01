@@ -4,12 +4,8 @@
 #include <string.h>
 #include <malloc.h>
 
-//height 480
-//width 640
-//bitsperpixel 24
 
 #define DEFAULT_PIXEL 0xE0
-
 
 void bitmap_api_image_test(void){
 	

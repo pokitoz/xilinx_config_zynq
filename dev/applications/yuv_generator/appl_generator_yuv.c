@@ -24,6 +24,11 @@ int main(void){
 	printf("Last pixel : %08x\n", last_pixel);
 	unsigned int byte_sent = generator_yuv_get_number_byte_sent(&dev);
 	printf("Byte sent : %08x\n", byte_sent);
+
+	generator_yuv_stop(&dev);
+	generator_yuv_start(&dev);
+
+	generator_yuv_wait_until_idle(&dev);
 	
 	return 0;
 
