@@ -1,20 +1,25 @@
 #!/bin/bash
 
-mode="444"
 
 input="$1"
-
-
 if [ -z "$input" ]; then
 	echo "## You need to specify a driver name..."
 	exit 0
 fi
 
 device_name=`basename $input .ko`
-directory=`dirname $input`
+directory=`readlink -f $input`
+directory=`dirname $directory`
+
+# make sure to be in the same directory as this script #########################
+current_script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+cd $current_script_dir
+
+mode="444"
+
 
 # unload module if already loaded
-if [ "$(lsmod | grep "${device_name}")" ]; then
+if [ -n "$(lsmod | grep ${device_name})" ]; then
 	echo "## Module $device_name already loaded. Will be unloaded"
     ./unload_driver.sh ${device_name}
 	echo "## Module $device_name unloaded"
