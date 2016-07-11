@@ -72,3 +72,5 @@ perl -pi -e 's/^(PermitRootLogin) without-password$/$1 yes/g' /etc/ssh/sshd_conf
 exit 0
 
 EOF
+
+popd
