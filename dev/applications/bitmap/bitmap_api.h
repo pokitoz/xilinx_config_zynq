@@ -74,5 +74,5 @@ typedef struct {
 
 void bitmap_api_save(uint8_t* rgb_img, const char* filename, uint32_t height, uint32_t width, uint16_t bitsperpixel);
 void bitmap_api_image_test(void);
-
+void bitmap_api_transform_8_to_24(uint8_t* buffer_24, uint8_t* buffer_8, uint32_t size_buffer_8);
 #endif
