@@ -40,7 +40,8 @@ pushd $applications_dir_r
 	sshpass -p "$env_sshpassword" scp -r convertor_yuv_rgb/ $sshcommand:~/Desktop
 	echo -e "$c_info Sending yuv_generator/ folder to $sshcommand:~/Desktop $c_default"
 	sshpass -p "$env_sshpassword" scp -r yuv_generator/ $sshcommand:~/Desktop
-
+	echo -e "$c_info Sending sobel_filter_app/ folder to $sshcommand:~/Desktop $c_default"
+	sshpass -p "$env_sshpassword" scp -r sobel_filter_app/ $sshcommand:~/Desktop
 #	rsync -av --exclude '*.svn' user@server:/my/dir .
 
 
