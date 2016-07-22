@@ -28,8 +28,10 @@ mkdir -p $results_dir_r
 pushd $results_dir_r
 
 	echo -e "$c_info Getting bmp $sshcommand:~/Desktop/convertor_interface/out.bmp $c_default"
-	sshpass -p "$env_sshpassword" scp -r $sshcommand:~/Desktop/convertor_interface/*.bmp ./
-
+	set +e	
+		sshpass -p "$env_sshpassword" scp -r $sshcommand:~/Desktop/convertor_interface/*.bmp ./
+		sshpass -p "$env_sshpassword" scp -r $sshcommand:~/Desktop/sobel_filter_app/*.bmp ./
+	set -e
 popd
 
 
