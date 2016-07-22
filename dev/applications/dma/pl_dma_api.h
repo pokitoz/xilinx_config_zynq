@@ -58,6 +58,7 @@ void pl_dma_status_s2mm(unsigned int* dma_address);
 void pl_dma_status_mm2s(unsigned int* dma_address);
 void pl_dma_print_buffer(void* buffer_address, int size);
 void pl_dma_init_buffer(void* buffer_address, int size);
-
+int pl_dma_is_mm2s_busy(unsigned int* dma_address);
+int pl_dma_is_s2mm_busy(unsigned int* dma_address);
 
 #endif

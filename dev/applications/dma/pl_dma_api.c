@@ -100,7 +100,6 @@ int pl_dma_sync_mm2s(unsigned int* dma_address) {
 	unsigned int mm2s_status =  pl_dma_get_reg(dma_address, MM2S_DMASR_I);
 
 	while(!(mm2s_status & 1<<MM2S_DMASR_IOC_IRQ_BIT) || !(mm2s_status & 1<<MM2S_DMASR_IDLE_BIT) ){
-	  pl_dma_status_s2mm(dma_address);
 	  pl_dma_status_mm2s(dma_address);
 
 	  mm2s_status =  pl_dma_get_reg(dma_address, MM2S_DMASR_I);
@@ -109,12 +108,23 @@ int pl_dma_sync_mm2s(unsigned int* dma_address) {
 	return (int) mm2s_status;
 }
 
+int pl_dma_is_s2mm_busy(unsigned int* dma_address){
+	unsigned int s2mm_status = pl_dma_get_reg(dma_address, S2MM_DMASR_I);
+	return (!(s2mm_status & 1<<S2MM_DMASR_IOC_IRQ_BIT) || !(s2mm_status & 1<<S2MM_DMASR_IDLE_BIT));
+}
+
+int pl_dma_is_mm2s_busy(unsigned int* dma_address){
+	unsigned int mm2s_status = pl_dma_get_reg(dma_address, MM2S_DMASR_I);
+	return (!(mm2s_status & 1<<MM2S_DMASR_IOC_IRQ_BIT) || !(mm2s_status & 1<<MM2S_DMASR_IDLE_BIT));
+}
+
+
+
 int pl_dma_sync_s2mm(unsigned int* dma_address) {
 	unsigned int s2mm_status = pl_dma_get_reg(dma_address, S2MM_DMASR_I);
 
 	while(!(s2mm_status & 1<<S2MM_DMASR_IOC_IRQ_BIT) || !(s2mm_status & 1<<S2MM_DMASR_IDLE_BIT)){
 	  pl_dma_status_s2mm(dma_address);
-	  pl_dma_status_mm2s(dma_address);
 
 	  s2mm_status = pl_dma_get_reg(dma_address, S2MM_DMASR_I);
 	}
