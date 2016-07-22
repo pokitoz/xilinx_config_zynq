@@ -21,9 +21,13 @@
 #include <linux/irq.h>
 #include <linux/platform_device.h>
 
+#include <linux/timer.h>
+
+
 #include "pl_axi_dma_dev.h"
 #include "../includes/xparameters.h"
 #include "../pl_dma_api.h"
+
 
 #define DEVICE_NAME "pl_axi_dma_driver"
 
@@ -45,22 +49,101 @@ static int axi_dma_interface_setup_cdev(axi_dma_interface_dev_t* driver_dev);
 static irqreturn_t axi_dma_isr_s2mm(int irq, void*dev_id);		
 static irqreturn_t axi_dma_isr_mm2s(int irq, void*dev_id);
 static int axi_dma_init_interrupt(unsigned int int_s2mm, unsigned int int_mm2s);
-
+static long axi_dma_interface_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
 
 struct file_operations axi_dma_fops = {
     .owner   = THIS_MODULE,
     .read    = axi_dma_interface_read,
     .write   = axi_dma_interface_write,
     .open    = axi_dma_interface_open,
+	.unlocked_ioctl = axi_dma_interface_ioctl,
     .release = axi_dma_interface_release
 };
 
-static struct platform_device *pdev;
+//static struct platform_device *pdev;
 axi_dma_interface_dev_t axi_dma_interface_dev;
 
 // store the major number extracted by dev_t
 int axi_dma_interface_major = 0;
 int axi_dma_interface_minor = 0;
+
+static struct timer_list pl_axi_dma_timer;
+uint8_t timeout = 0;
+void pl_axi_dma_timer_callback( unsigned long data )
+{
+	timeout = 1;
+}
+
+
+static long axi_dma_interface_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+{
+
+	axi_dma_interface_dev_t* axi_dma_interface = filp->private_data;
+
+	switch (cmd) {
+		// Ge thte number of channel found
+		case PL_AXI_DMA_GET_DEV_INFO:
+			printk(KERN_INFO "<%s> ioctl: PL_AXI_DMA_GET_DEV_INFO\n", DEVICE_NAME);
+			if (copy_to_user((uint32_t*) arg, &axi_dma_interface->pl_dma_dev, sizeof(pl_dma_dev_t))){
+				return -EFAULT;
+			}
+			break;
+		case PL_AXI_DMA_DEVICE_CONTROL:
+			printk(KERN_INFO "<%s> ioctl: PL_AXI_DMA_DEVICE_CONTROL\n", DEVICE_NAME);
+
+			pl_dma_dev_t pl_dma_dev_input;
+			if (copy_from_user((void *)&pl_dma_dev_input, (const void __user *)arg, sizeof(pl_dma_dev_t))){
+				return -EFAULT;
+			}
+
+
+			axi_dma_interface->pl_dma_dev.length = pl_dma_dev_input.length;
+			axi_dma_interface->pl_dma_dev.base_addr = pl_dma_dev_input.base_addr;
+			axi_dma_interface->pl_dma_dev.high_addr = pl_dma_dev_input.high_addr;
+	
+			axi_dma_interface_dev_end(axi_dma_interface);
+
+			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change length: %u\n", pl_dma_dev_input.length);
+			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
+			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
+
+			resource_size_t offset = axi_dma_interface->pl_dma_dev.base_addr;
+			unsigned long size = axi_dma_interface->pl_dma_dev.high_addr - axi_dma_interface->pl_dma_dev.base_addr + 1;
+			axi_dma_interface->pl_dma_dev.addr = ioremap_nocache(offset, size);
+
+
+
+
+			break;
+		case PL_AXI_DMA_PREP_BUF:
+			printk(KERN_INFO "<%s> ioctl: XDMA_PREP_BUF\n", DEVICE_NAME);
+
+		   	uint8_t *virt = ioremap_nocache((phys_addr_t) SOURCE_MEM_ADDRESS, axi_dma_interface->pl_dma_dev.length);
+
+			if (copy_from_user((void *)virt, (const void __user *)arg, axi_dma_interface->pl_dma_dev.length)){
+				return -EFAULT;
+			}
+			
+			iounmap(virt);
+
+			break;
+		case PL_AXI_DMA_START_TRANSFER:
+			printk(KERN_INFO "<%s> ioctl: XDMA_START_TRANSFER\n", DEVICE_NAME);
+			break;
+		case PL_AXI_DMA_STOP_TRANSFER:
+			printk(KERN_INFO "<%s> ioctl: XDMA_STOP_TRANSFER\n", DEVICE_NAME);
+			break;
+		case PL_AXI_DMA_TEST_TRANSFER:
+			printk(KERN_INFO "<%s> ioctl: XDMA_TEST_TRANSFER\n", DEVICE_NAME);
+			break;
+		default:
+			break;
+	}
+
+	return 0;
+}
+
+
 
 /**
 * Clear the part in memory that we are going to write using the DMA
@@ -74,7 +157,7 @@ static void clear_buffer(void) {
 		size_t i = 0;
 		// Byte to byte initialization
 		do {
-		    *virt = 0xFF;
+		    *virt = i;
 		    virt += 1;
 		    i += 1;
 		} while (i < BUFFER_LENGTH_1MB);
@@ -103,7 +186,7 @@ static int copy_to_user_frame_buffer(char __user *buf, phys_addr_t address, unsi
 /*inode reffers to the actual file on disk*/
 int axi_dma_interface_open(struct inode *inode, struct file *filp) {
     
-	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_open\n");
+	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_open\n");
     axi_dma_interface_dev_t *axi_dma_interface;
 
     axi_dma_interface = container_of(inode->i_cdev, axi_dma_interface_dev_t, cdev);
@@ -111,7 +194,7 @@ int axi_dma_interface_open(struct inode *inode, struct file *filp) {
 
     if (!atomic_dec_and_test(&axi_dma_interface->available)) {
         atomic_inc(&axi_dma_interface->available);
-        printk(KERN_ALERT "open axi_dma_interface: the device has been opened by some other device, unable to open lock\n");
+        printk(KERN_ALERT DEVICE_NAME " :open axi_dma_interface: the device has been opened by some other device, unable to open lock\n");
         return -EBUSY; /* already open */
     }
 
@@ -120,6 +203,9 @@ int axi_dma_interface_open(struct inode *inode, struct file *filp) {
 }
 
 int axi_dma_interface_release(struct inode *inode, struct file *filp) {
+
+	printk(KERN_ALERT DEVICE_NAME " :axi_dma_interface_release\n");
+
     axi_dma_interface_dev_t *axi_dma_interface = filp->private_data;
     atomic_inc(&axi_dma_interface->available); /* release the device */
     return 0;
@@ -130,13 +216,13 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
 
 	// Get the structure of the interface from the device file
     if(filp == NULL){
-        printk("axi_dma_interface_read: axi_dma_interface file NULL\n");
+        printk(DEVICE_NAME " :axi_dma_interface_read: axi_dma_interface file NULL\n");
 		return -ERESTARTSYS;
     }
 
     axi_dma_interface_dev_t* axi_dma_interface = filp->private_data;
     if(axi_dma_interface == NULL){
-        printk("axi_dma_interface_read: axi_dma_interface_dev_t NULL\n");
+        printk(DEVICE_NAME " :axi_dma_interface_read: axi_dma_interface_dev_t NULL\n");
 		return -ERESTARTSYS;
     }
 
@@ -146,7 +232,12 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
         return -ERESTARTSYS;
     }
 
-    clear_buffer();
+  //  clear_buffer();
+	timeout = 0;
+	//setup your timer to call callback function
+	setup_timer(&pl_axi_dma_timer, pl_axi_dma_timer_callback, 0);
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 	//axi_dma_interface->pl_dma_dev.addr = ioremap_nocache(XPAR_AXI_DMA_0_BASEADDR, XPAR_AXI_DMA_0_HIGHADDR - XPAR_AXI_DMA_0_BASEADDR + 1);
@@ -161,22 +252,37 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
 
 	pl_dma_set_length(axi_dma_interface->pl_dma_dev.addr, axi_dma_interface->pl_dma_dev.length);
 
-	pl_dma_sync_mm2s(axi_dma_interface->pl_dma_dev.addr);
-	pl_dma_sync_s2mm(axi_dma_interface->pl_dma_dev.addr);
+//	pl_dma_sync_mm2s(axi_dma_interface->pl_dma_dev.addr);
+//	pl_dma_sync_s2mm(axi_dma_interface->pl_dma_dev.addr);
+
+	//	setup timer interval to 1000 msecs 
+	mod_timer(&pl_axi_dma_timer, jiffies + msecs_to_jiffies(1000));
+	while(pl_dma_is_s2mm_busy(axi_dma_interface->pl_dma_dev.addr) || pl_dma_is_mm2s_busy(axi_dma_interface->pl_dma_dev.addr) ){
+		if(timeout == 1){
+			printk(DEVICE_NAME " :axi_dma_interface_read: Timeout...\n");
+			retval = -ERESTARTSYS;
+			del_timer(&pl_axi_dma_timer);			
+			goto fail;
+		}
+	}
+
+	del_timer(&pl_axi_dma_timer);
 
 ////////////////////////////////////////////////////////////////////////////////
 	//iounmap(axi_dma_interface->pl_dma_dev.addr);
 
 
-    /* start acquisition */ 
+
+
     // copy to user  
 	
 
     retval = copy_to_user_frame_buffer(buf, DEST_MEM_ADDRESS, axi_dma_interface->pl_dma_dev.length);
     if (retval) {
-        printk("axi_dma_interface_read: Fail copy to user\n");
+        printk(DEVICE_NAME " :axi_dma_interface_read: Fail copy to user\n");
         goto fail;
     }
+
 fail:
     up(&axi_dma_interface->sem);
     return retval;
@@ -186,7 +292,7 @@ fail:
 
 ssize_t axi_dma_interface_write(struct file *filp, const char __user *buf, size_t count, loff_t *f_pos) {
 
-	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write\n");
+	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write\n");
     axi_dma_interface_dev_t* axi_dma_interface = filp->private_data;
     ssize_t retval = 0;
 
@@ -207,9 +313,10 @@ ssize_t axi_dma_interface_write(struct file *filp, const char __user *buf, size_
 	
 	axi_dma_interface_dev_end(axi_dma_interface);
 
-	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write change length: %u\n", pl_dma_dev_input.length);
-	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
-	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
+	printk(KERN_INFO DEVICE_NAME "  f_pos: %u\n", f_pos);
+	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change length: %u\n", pl_dma_dev_input.length);
+	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
+	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
 
 	resource_size_t offset = axi_dma_interface->pl_dma_dev.base_addr;
 	unsigned long size = axi_dma_interface->pl_dma_dev.high_addr - axi_dma_interface->pl_dma_dev.base_addr + 1;
@@ -245,7 +352,7 @@ static void axi_dma_interface_dev_init(axi_dma_interface_dev_t* driver_dev) {
 	resource_size_t offset = driver_dev->pl_dma_dev.base_addr;
 	unsigned long size = driver_dev->pl_dma_dev.high_addr - driver_dev->pl_dma_dev.base_addr + 1;
 	driver_dev->pl_dma_dev.addr = ioremap_nocache(offset, size);
-	printk(KERN_INFO "axi_dma_interface_dev_init: ioremap\n");
+	printk(KERN_INFO DEVICE_NAME " :axi_dma_interface_dev_init: ioremap\n");
 	
 	//axi_dma_init_interrupt(driver_dev->pl_dma_dev.int_s2mm, driver_dev->pl_dma_dev.int_mm2s);
 
@@ -254,13 +361,13 @@ static void axi_dma_interface_dev_init(axi_dma_interface_dev_t* driver_dev) {
 
 static void axi_dma_interface_dev_end(axi_dma_interface_dev_t* driver_dev) {
 	iounmap(driver_dev->pl_dma_dev.addr);
-	printk(KERN_INFO "axi_dma_interface_dev_end: iounmap\n");
+	printk(KERN_INFO DEVICE_NAME " :axi_dma_interface_dev_end: iounmap\n");
 }
 
 static int axi_dma_interface_setup_cdev(axi_dma_interface_dev_t* driver_dev) {
     int error = 0;
 
-	printk(KERN_INFO "axi_dma_interface: axi_dma_interface_setup_cdev\n");
+	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_setup_cdev\n");
     dev_t devno = MKDEV(axi_dma_interface_major, axi_dma_interface_minor);
 
     cdev_init(&driver_dev->cdev, &axi_dma_fops);
@@ -276,13 +383,13 @@ static int axi_dma_interface_setup_cdev(axi_dma_interface_dev_t* driver_dev) {
 // -------------------------- INTERRUPT (IRQ) ----------
 static irqreturn_t axi_dma_isr_s2mm(int irq, void*dev_id)		
 {
-  printk(KERN_INFO "axi_dma_isr_ss2m: Interrupt!!\n");
+  printk(KERN_INFO DEVICE_NAME " :axi_dma_isr_ss2m: Interrupt!!\n");
   return IRQ_HANDLED;
 }
 
 static irqreturn_t axi_dma_isr_mm2s(int irq, void*dev_id)		
 {
-  printk(KERN_INFO "axi_dma_isr_mm2s: Interrupt!!\n");
+  printk(KERN_INFO DEVICE_NAME " :axi_dma_isr_mm2s: Interrupt!!\n");
   return IRQ_HANDLED;
 }
 
@@ -290,21 +397,21 @@ static int axi_dma_init_interrupt(unsigned int int_s2mm, unsigned int int_mm2s){
 
 	if(int_s2mm >= 61 && int_s2mm <= 91){
 		if (request_irq(int_s2mm, axi_dma_isr_s2mm, 0, DEVICE_NAME, NULL)) {
-			printk(KERN_ERR "axi_dma_init: Cannot register IRQ S2MM%d\n", int_s2mm);
+			printk(KERN_ERR DEVICE_NAME " :axi_dma_init: Cannot register IRQ S2MM%d\n", int_s2mm);
 			return -EIO; ///* I/O error */
 		}
 		else {
-			printk(KERN_INFO "axi_dma_init: Registered IRQ SS2M %d\n", int_s2mm);
+			printk(KERN_INFO DEVICE_NAME " :axi_dma_init: Registered IRQ SS2M %d\n", int_s2mm);
 		}
 	}
 
 	if(int_mm2s >= 61 && int_mm2s <= 91){
 		if (request_irq(int_mm2s, axi_dma_isr_mm2s, 0, DEVICE_NAME, NULL)) {
-			printk(KERN_ERR "axi_dma_init: Cannot register IRQ MM2S%d\n", int_mm2s);
+			printk(KERN_ERR DEVICE_NAME " :axi_dma_init: Cannot register IRQ MM2S%d\n", int_mm2s);
 			return -EIO;
 		}
 		else {
-			printk(KERN_INFO "axi_dma_init: Registered IRQ MM2S %d\n", int_mm2s);
+			printk(KERN_INFO DEVICE_NAME " :axi_dma_init: Registered IRQ MM2S %d\n", int_mm2s);
 		}
 	}
 
@@ -320,7 +427,7 @@ static int axi_dma_init_interrupt(unsigned int int_s2mm, unsigned int int_mm2s){
 static int __init axi_dma_init(void)  
 {
 
-    printk(KERN_INFO "axi_dma_interface: axi_dma_init\n");
+    printk(KERN_INFO DEVICE_NAME "  axi_dma_init\n");
 	dev_t devno = 0;
     int result = 0;
 
@@ -331,18 +438,21 @@ static int __init axi_dma_init(void)
     /* we will get the major number dynamically this is recommended see book : ldd3*/
     result = alloc_chrdev_region(&devno, axi_dma_interface_minor, 1, DEVICE_NAME);
     axi_dma_interface_major = MAJOR(devno);
+
     if (result < 0) {
-        printk(KERN_WARNING "axi_dma_interface: can't get major number %d\n", axi_dma_interface_major);
+        printk(KERN_WARNING DEVICE_NAME "  can't get major number %d\n", axi_dma_interface_major);
         goto fail;
     }
 
     result = axi_dma_interface_setup_cdev(&axi_dma_interface_dev);
     if (result < 0) {
-        printk(KERN_WARNING "axi_dma_interface: error %d adding convertor_interface\n", result);
+        printk(KERN_WARNING DEVICE_NAME "  error %d adding convertor_interface\n", result);
         goto fail;
     }
 
-    printk(KERN_INFO "axi_dma_interface: module loaded\n");
+	clear_buffer();
+
+    printk(KERN_INFO DEVICE_NAME "  module loaded\n");
     return 0;
 
 
@@ -355,11 +465,20 @@ fail:
 static void __exit axi_dma_exit(void)  		
 {
 
+	dev_t devno = MKDEV(axi_dma_interface_major, axi_dma_interface_minor);
+	printk(KERN_ALERT DEVICE_NAME " :axi_dma_interface_release: major %d\n", axi_dma_interface_major );
+	unregister_chrdev_region(devno, 1);
+
 	axi_dma_interface_dev_end(&axi_dma_interface_dev);
-  	free_irq(axi_dma_interface_dev.pl_dma_dev.int_s2mm, NULL);
-	free_irq(axi_dma_interface_dev.pl_dma_dev.int_mm2s, NULL);
-  	platform_device_unregister(pdev);
-  	printk(KERN_INFO "axi_dma_interface: axi_dma_exit Exit Device Module \"%s\".\n", DEVICE_NAME);
+
+	if(axi_dma_interface_dev.pl_dma_dev.int_s2mm >= 61 && axi_dma_interface_dev.pl_dma_dev.int_s2mm <= 91){
+  		free_irq(axi_dma_interface_dev.pl_dma_dev.int_s2mm, NULL);
+	}
+	if(axi_dma_interface_dev.pl_dma_dev.int_mm2s >= 61 && axi_dma_interface_dev.pl_dma_dev.int_mm2s <= 91){	
+		free_irq(axi_dma_interface_dev.pl_dma_dev.int_mm2s, NULL);
+  	}
+	//platform_device_unregister(pdev);
+  	printk(KERN_INFO DEVICE_NAME "  axi_dma_exit Exit Device Module \"%s\".\n", DEVICE_NAME);
 
 }
 
