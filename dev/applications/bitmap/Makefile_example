@@ -1,0 +1,15 @@
+CC=$(CROSS_COMPILE)gcc
+CFLAGS=-Wall -std=c99 -O0 -g -Wconversion -Wextra -D APPLICATION_COMPILATION
+
+all: clean demo_bitmap clean
+
+demo_bitmap: demo_bitmap.o bitmap_api.o
+	$(CC) -o $@ $^ $(CFLAGS)
+
+bitmap_api.o: bitmap_api.c bitmap_api.h
+	$(CC) -o $@ -c $< $(CFLAGS)
+
+
+clean:
+	rm -rf *.o
+
