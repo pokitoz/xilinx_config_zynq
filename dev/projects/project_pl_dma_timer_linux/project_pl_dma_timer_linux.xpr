@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Product Version: Vivado v2016.2 (64-bit)              -->
+<!--                                                         -->
+<!-- Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.   -->
+
+<Project Version="7" Minor="14" Path="/home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/projects/project_pl_dma_timer_linux/project_pl_dma_timer_linux.xpr">
+  <DefaultLaunch Dir="$PRUNDIR"/>
+  <Configuration>
+    <Option Name="Id" Val="fc202233289a4f00a194edf68f9090ba"/>
+    <Option Name="Part" Val="xc7z020clg400-1"/>
+    <Option Name="CompiledLibDir" Val="$PCACHEDIR/compile_simlib"/>
+    <Option Name="CompiledLibDirXSim" Val=""/>
+    <Option Name="CompiledLibDirModelSim" Val="$PCACHEDIR/compile_simlib/modelsim"/>
+    <Option Name="CompiledLibDirQuesta" Val="$PCACHEDIR/compile_simlib/questa"/>
+    <Option Name="CompiledLibDirIES" Val="$PCACHEDIR/compile_simlib/ies"/>
+    <Option Name="CompiledLibDirVCS" Val="$PCACHEDIR/compile_simlib/vcs"/>
+    <Option Name="CompiledLibDirRiviera" Val="$PCACHEDIR/compile_simlib/riviera"/>
+    <Option Name="CompiledLibDirActivehdl" Val="$PCACHEDIR/compile_simlib/activehdl"/>
+    <Option Name="TargetLanguage" Val="VHDL"/>
+    <Option Name="SimulatorLanguage" Val="VHDL"/>
+    <Option Name="BoardPart" Val=""/>
+    <Option Name="ActiveSimSet" Val="sim_1"/>
+    <Option Name="DefaultLib" Val="xil_defaultlib"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../ip_repo/stream_master_test_1.0"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../ip_repo/convertor_yuv_rgb_1.0"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../ip_repo/yuv_generator_1.0"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../ip_repo/stream_to_stream_axi_1.0"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../../modules/power2AXIStream"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../ip_repo/add_stream_1.0"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../ip_repo/led_slave_1.0"/>
+    <Option Name="IPRepoPath" Val="$PPRDIR/../../../../../../../axi_stream_no_side_channel_data/proj_axi_stream_no_side_channel_data/solution1/impl/ip"/>
+    <Option Name="EnableCoreContainer" Val="FALSE"/>
+    <Option Name="XPMLibraries" Val="XPM_CDC"/>
+    <Option Name="XPMLibraries" Val="XPM_MEMORY"/>
+    <Option Name="CreateRefXciForCoreContainers" Val="FALSE"/>
+    <Option Name="IPUserFilesDir" Val="$PPRDIR/project_pl_dma_timer_linux.ip_user_files"/>
+    <Option Name="IPStaticSourceDir" Val="$PPRDIR/project_pl_dma_timer_linux.ip_user_files/ipstatic"/>
+    <Option Name="EnableBDX" Val="FALSE"/>
+    <Option Name="WTXSimLaunchSim" Val="0"/>
+    <Option Name="WTModelSimLaunchSim" Val="0"/>
+    <Option Name="WTQuestaLaunchSim" Val="0"/>
+    <Option Name="WTIesLaunchSim" Val="0"/>
+    <Option Name="WTVcsLaunchSim" Val="0"/>
+    <Option Name="WTRivieraLaunchSim" Val="0"/>
+    <Option Name="WTActivehdlLaunchSim" Val="0"/>
+    <Option Name="WTXSimExportSim" Val="20"/>
+    <Option Name="WTModelSimExportSim" Val="20"/>
+    <Option Name="WTQuestaExportSim" Val="20"/>
+    <Option Name="WTIesExportSim" Val="20"/>
+    <Option Name="WTVcsExportSim" Val="20"/>
+    <Option Name="WTRivieraExportSim" Val="20"/>
+    <Option Name="WTActivehdlExportSim" Val="20"/>
+    <Option Name="GenerateIPUpgradeLog" Val="TRUE"/>
+  </Configuration>
+  <FileSets Version="1" Minor="31">
+    <FileSet Name="sources_1" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1">
+      <Filter Type="Srcs"/>
+      <File Path="$PSRCDIR/sources_1/bd/linux_pl/linux_pl.bd">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../linux/linux.srcs/sources_1/bd/linux_pl/linux_pl.bd"/>
+          <Attr Name="ImportTime" Val="1469180376"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_auto_us_0/linux_pl_auto_us_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_auto_pc_1/linux_pl_auto_pc_1.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_auto_us_1/linux_pl_auto_us_1.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_processing_system7_0_0/linux_pl_processing_system7_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_stream_to_stream_axi_0_0/linux_pl_stream_to_stream_axi_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_axi_timer_0_0/linux_pl_axi_timer_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_xbar_3/linux_pl_xbar_3.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_xbar_2/linux_pl_xbar_2.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_processing_system7_0_axi_periph_1/linux_pl_processing_system7_0_axi_periph_1.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_rst_processing_system7_0_100M_1/linux_pl_rst_processing_system7_0_100M_1.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_axi_mem_intercon_1/linux_pl_axi_mem_intercon_1.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_axis_data_fifo_0_0/linux_pl_axis_data_fifo_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_axis_data_fifo_0_1/linux_pl_axis_data_fifo_0_1.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="hdl/linux_pl.vhd"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_xlconcat_0_0/linux_pl_xlconcat_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_axi_dma_0_0/linux_pl_axi_dma_0_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_led_slave_0_2/linux_pl_led_slave_0_2.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="ip/linux_pl_auto_pc_0/linux_pl_auto_pc_0.xci"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="hdl/linux_pl.hwdef"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="hw_handoff/linux_pl_bd.tcl"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="hw_handoff/linux_pl.hwh"/>
+        <CompFileExtendedInfo CompFileName="linux_pl.bd" FileRelPathName="linux_pl_ooc.xdc"/>
+      </File>
+      <File Path="$PSRCDIR/sources_1/bd/linux_pl/hdl/linux_pl_wrapper.vhd">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../linux/linux.srcs/sources_1/bd/linux_pl/hdl/linux_pl_wrapper.vhd"/>
+          <Attr Name="ImportTime" Val="1469180375"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <Config>
+        <Option Name="DesignMode" Val="RTL"/>
+        <Option Name="TopModule" Val="linux_pl_wrapper"/>
+        <Option Name="TopAutoSet" Val="TRUE"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
+      <Filter Type="Constrs"/>
+      <File Path="$PSRCDIR/constrs_1/new/my_config.xdc">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../linux/linux.srcs/constrs_1/new/my_config.xdc"/>
+          <Attr Name="ImportTime" Val="1465479720"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+        </FileInfo>
+      </File>
+      <Config>
+        <Option Name="TargetConstrsFile" Val="$PSRCDIR/constrs_1/new/my_config.xdc"/>
+        <Option Name="ConstrsType" Val="XDC"/>
+      </Config>
+    </FileSet>
+    <FileSet Name="sim_1" Type="SimulationSrcs" RelSrcDir="$PSRCDIR/sim_1">
+      <Filter Type="Srcs"/>
+      <Config>
+        <Option Name="DesignMode" Val="RTL"/>
+        <Option Name="TopModule" Val="linux_pl_wrapper"/>
+        <Option Name="TopLib" Val="xil_defaultlib"/>
+        <Option Name="TopAutoSet" Val="TRUE"/>
+        <Option Name="TransportPathDelay" Val="0"/>
+        <Option Name="TransportIntDelay" Val="0"/>
+        <Option Name="SimMode" Val="post-implementation"/>
+        <Option Name="SrcSet" Val="sources_1"/>
+      </Config>
+    </FileSet>
+  </FileSets>
+  <Simulators>
+    <Simulator Name="XSim">
+      <Option Name="Description" Val="Vivado Simulator"/>
+      <Option Name="CompiledLib" Val="0"/>
+    </Simulator>
+    <Simulator Name="ModelSim">
+      <Option Name="Description" Val="ModelSim Simulator"/>
+    </Simulator>
+    <Simulator Name="Questa">
+      <Option Name="Description" Val="Questa Advanced Simulator"/>
+    </Simulator>
+    <Simulator Name="IES">
+      <Option Name="Description" Val="Incisive Enterprise Simulator (IES)"/>
+    </Simulator>
+    <Simulator Name="VCS">
+      <Option Name="Description" Val="Verilog Compiler Simulator (VCS)"/>
+    </Simulator>
+    <Simulator Name="Riviera">
+      <Option Name="Description" Val="Riviera-PRO Simulator"/>
+    </Simulator>
+  </Simulators>
+  <Runs Version="1" Minor="10">
+    <Run Id="synth_1" Type="Ft3:Synth" SrcSet="sources_1" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Vivado Synthesis Defaults" State="current" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2016"/>
+        <Step Id="synth_design"/>
+      </Strategy>
+    </Run>
+    <Run Id="impl_1" Type="Ft2:EntireDesign" Part="xc7z020clg400-1" ConstrsSet="constrs_1" Description="Default settings for Implementation." State="current" SynthRun="synth_1" IncludeInArchive="true">
+      <Strategy Version="1" Minor="2">
+        <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2016"/>
+        <Step Id="init_design"/>
+        <Step Id="opt_design"/>
+        <Step Id="power_opt_design"/>
+        <Step Id="place_design"/>
+        <Step Id="post_place_power_opt_design"/>
+        <Step Id="phys_opt_design"/>
+        <Step Id="route_design"/>
+        <Step Id="post_route_phys_opt_design"/>
+        <Step Id="write_bitstream"/>
+      </Strategy>
+    </Run>
+  </Runs>
+</Project>
