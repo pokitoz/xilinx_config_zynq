@@ -21,7 +21,7 @@ mode="444"
 # unload module if already loaded
 if [ -n "$(lsmod | grep ${device_name})" ]; then
 	echo "## Module $device_name already loaded. Will be unloaded"
-    ./unload_driver.sh ${device_name}
+    #./unload_driver.sh ${device_name}
 	echo "## Module $device_name unloaded"
 fi
 
@@ -44,7 +44,7 @@ echo "##Removing stale nodes"
 rm -f /dev/${device_name}
 echo "##Replacing the old nodes"
 mknod /dev/${device_name} c ${major_number[0]} 0
-
+major=$(cat /proc/devices | grep "$device_name")
 
 
 
