@@ -79,7 +79,6 @@
 typedef struct pl_dma_dev_t{
 
 	void* addr;
-	unsigned int length;
 
 	unsigned int base_addr;
 	unsigned int high_addr;
@@ -87,16 +86,19 @@ typedef struct pl_dma_dev_t{
 	unsigned int int_s2mm;
 	unsigned int int_mm2s;
 
+	unsigned int length_s2mm;
+	unsigned int length_mm2s;
+
+	unsigned int addr_s2mm;	
+	unsigned int addr_mm2s;
+
 } pl_dma_dev_t;
 
 
-pl_dma_dev_t pl_dma_init(
-	unsigned int length,
-	unsigned int base_addr,
-	unsigned int high_addr,
-	unsigned int int_s2mm,
-	unsigned int int_mm2s
-);
+pl_dma_dev_t pl_dma_init(unsigned int length_s2mm, unsigned int length_mm2s,
+						unsigned int addr_s2mm, unsigned int addr_mm2s,
+						unsigned int base_addr,	unsigned int high_addr,
+						unsigned int int_s2mm, unsigned int int_mm2s);
 
 
 #endif

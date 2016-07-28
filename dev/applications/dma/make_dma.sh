@@ -15,6 +15,7 @@ pushd "${current_script_dir}"
 	
 	#Make driver
 	pushd ./driver
+		find ./ -type f -exec touch {} +
 		rm -rf "*.ko"
 		make clean
 		make -C $kernel_dir_r ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILE M=`pwd`

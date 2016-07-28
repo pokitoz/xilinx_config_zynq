@@ -1,7 +1,6 @@
+#include "../includes/pl_io_define.h"
 #include "pl_dma_api.h"
 
-
-static void pl_dma_print_status(unsigned int status);
 
 // Set and modify value in the register of the DMA depedning on the offset of the register
 void pl_dma_set_reg(unsigned int* dma_address, int offset, unsigned int value) {
@@ -19,16 +18,38 @@ unsigned int pl_dma_get_reg(unsigned int* dma_address, int offset) {
 }
 
 
+void pl_dma_print_desc(pl_dma_dev_t dma_dev){
 
-pl_dma_dev_t pl_dma_init(	unsigned int length,
-						unsigned int base_addr,
-						unsigned int high_addr,
-						unsigned int int_s2mm,
-						unsigned int int_mm2s){
+	PRINT_CUSTOM("\ndma_dev: ");
+	PRINT_CUSTOM("dma_dev.addr\t 0x%08x \n", (unsigned int) dma_dev.addr);
+	PRINT_CUSTOM("dma_dev.addr_mm2s\t 0x%08x \n", dma_dev.addr_mm2s);
+	PRINT_CUSTOM("dma_dev.addr_s2mm\t 0x%08x \n", dma_dev.addr_s2mm);
 
+	PRINT_CUSTOM("dma_dev.length_mm2s\t 0x%08x \n", dma_dev.length_mm2s);
+	PRINT_CUSTOM("dma_dev.length_s2mm\t 0x%08x \n", dma_dev.length_s2mm);
+
+	PRINT_CUSTOM("dma_dev.high_addr\t 0x%08x \n", (unsigned int) dma_dev.high_addr);
+	PRINT_CUSTOM("dma_dev.base_addr\t 0x%08x \n", (unsigned int) dma_dev.base_addr);
+
+	PRINT_CUSTOM("dma_dev.int_s2mm\t 0x%08x \n", dma_dev.int_s2mm);
+	PRINT_CUSTOM("dma_dev.int_mm2s\t 0x%08x \n\n", dma_dev.int_mm2s);
+
+}
+
+
+
+pl_dma_dev_t pl_dma_init(unsigned int length_s2mm, unsigned int length_mm2s,
+						unsigned int addr_s2mm, unsigned int addr_mm2s,
+						unsigned int base_addr,	unsigned int high_addr,
+						unsigned int int_s2mm, unsigned int int_mm2s){
 
 	pl_dma_dev_t dev;
-	dev.length = length;
+	dev.length_s2mm = length_s2mm;
+	dev.length_mm2s = length_mm2s;
+
+	dev.addr_s2mm = addr_s2mm;
+	dev.addr_mm2s = addr_mm2s ;
+
 	dev.base_addr = base_addr;
 	dev.high_addr = high_addr;
 	dev.int_s2mm = int_s2mm;
@@ -134,7 +155,7 @@ int pl_dma_sync_s2mm(unsigned int* dma_address) {
 
 
 
-static void pl_dma_print_status(unsigned int status){
+void pl_dma_print_status(unsigned int status){
 
 	if (status & DMA_HALTED){
 		PRINT_CUSTOM(" DMA_HALTED\n");

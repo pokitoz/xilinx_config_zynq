@@ -3,7 +3,7 @@ cmd_/home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/app
 source_/home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api.o := /home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api.c
 
 deps_/home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api.o := \
-  /home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api.h \
+  /home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../../includes/pl_io_define.h \
   include/linux/module.h \
     $(wildcard include/config/sysfs.h) \
     $(wildcard include/config/modules.h) \
@@ -438,6 +438,7 @@ deps_/home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/ap
     $(wildcard include/config/xen.h) \
     $(wildcard include/config/xen/dom0.h) \
     $(wildcard include/config/xen/pvh.h) \
+  /home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api.h \
   /home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api_structure.h \
 
 /home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api.o: $(deps_/home/fdepraz/Desktop/git/fpga_soc_project_xilinx/xilinx_config_zynq/dev/applications/dma/driver/../pl_dma_api.o)

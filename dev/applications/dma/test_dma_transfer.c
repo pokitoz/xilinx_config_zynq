@@ -5,7 +5,7 @@
 // S2MM stands for Stream to Memory Map
 
 #include "pl_dma_api.h"
-#include "includes/xparameters.h"
+#include "../includes/xparameters.h"
 #include <sys/mman.h>
 #include <stdio.h>
 #include <unistd.h>
