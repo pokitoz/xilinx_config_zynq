@@ -49,11 +49,6 @@ xillinx_source/
 *etc_network_interfaces
 
 # Dev directory
-dev/*
-!dev/*.sh
-!dev/projects/*/linux.sdk/*.hdf
-includes/
-!dev/applications/
 
 
 # Linux directory
