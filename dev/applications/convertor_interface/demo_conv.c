@@ -15,11 +15,10 @@
 
 #include "../bitmap/bitmap_api.h"
 #include "../dma/pl_dma_api_structure.h" 
-#include "./includes/xparameters.h"
+#include "../includes/xparameters.h"
 
 #define PL_DMA_DRIVER_NAME "/dev/pl_axi_dma_driver"
 #define DATA_TRANSFER_LENGTH (640*480)
-#define PRINT_NUMBER_BYTE_PER_LINE 16
 
 int open_driver(const char* driver_name);
 void close_driver(const char* driver_name, int fd_driver);
@@ -107,11 +106,12 @@ int main(void) {
 	print_buffer(struct_img, 32);
 
 	pl_dma_dev_t dev;
-	dev.length = DATA_TRANSFER_LENGTH;
+	dev.length_mm2s = DATA_TRANSFER_LENGTH;
+	dev.length_s2mm = DATA_TRANSFER_LENGTH;
 	dev.base_addr = XPAR_AXI_DMA_0_BASEADDR;
 	dev.high_addr = XPAR_AXI_DMA_0_HIGHADDR;
 	dev.int_s2mm = XPAR_FABRIC_AXI_DMA_0_S2MM_INTROUT_INTR;
-	dev.int_mm2s = XPAR_FABRIC_AXI_DMA_0_MM2S_INTROUT_INTR;
+	dev.int_mm2s = 0;
 
 
    	int fd_dma = open_driver(PL_DMA_DRIVER_NAME);
