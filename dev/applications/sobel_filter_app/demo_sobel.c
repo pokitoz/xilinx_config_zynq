@@ -26,7 +26,7 @@
 #define IMAGE_COL 640
 #define IMAGE_ROW 480
 #define IMAGE_SOURCE_RESOLUTION (IMAGE_COL*IMAGE_ROW)
-#define IMAGE_BYTES_PER_PIXEL 4
+#define IMAGE_BYTES_PER_PIXEL 1
 
 #define DEMO_SOBEL_PRINT_NUMBER_BYTE_PER_LINE 16
 int open_driver(const char* driver_name);
