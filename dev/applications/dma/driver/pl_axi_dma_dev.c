@@ -25,17 +25,14 @@
 
 
 #include "pl_axi_dma_dev.h"
-#include "../includes/xparameters.h"
+#include "../../includes/xparameters.h"
 #include "../pl_dma_api.h"
 
 
 #define DEVICE_NAME "pl_axi_dma_driver"
 
  
-#define SOURCE_MEM_ADDRESS	RESERVED_BUFFER_PHYS_ADDR
-#define DEST_MEM_ADDRESS 	(RESERVED_BUFFER_PHYS_ADDR + BUFFER_LENGTH_1MB)
 
-#define DATA_TRANSFER_LENGTH (32)
 
 
 static void __exit axi_dma_exit(void);
@@ -50,7 +47,7 @@ static irqreturn_t axi_dma_isr_s2mm(int irq, void*dev_id);
 static irqreturn_t axi_dma_isr_mm2s(int irq, void*dev_id);
 static int axi_dma_init_interrupt(unsigned int int_s2mm, unsigned int int_mm2s);
 static long axi_dma_interface_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
-
+static void axi_dma_interface_copy_structure( pl_dma_dev_t* out, pl_dma_dev_t* in);
 struct file_operations axi_dma_fops = {
     .owner   = THIS_MODULE,
     .read    = axi_dma_interface_read,
@@ -97,30 +94,28 @@ static long axi_dma_interface_ioctl(struct file *filp, unsigned int cmd, unsigne
 			}
 
 
-			axi_dma_interface->pl_dma_dev.length = pl_dma_dev_input.length;
-			axi_dma_interface->pl_dma_dev.base_addr = pl_dma_dev_input.base_addr;
-			axi_dma_interface->pl_dma_dev.high_addr = pl_dma_dev_input.high_addr;
-	
+
+			axi_dma_interface_copy_structure(&axi_dma_interface->pl_dma_dev, &pl_dma_dev_input);	
 			axi_dma_interface_dev_end(axi_dma_interface);
 
-			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change length: %u\n", pl_dma_dev_input.length);
-			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
-			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
+
+			pl_dma_print_desc(pl_dma_dev_input);
+//			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change length: %08x - %08x\n", pl_dma_dev_input.length_mm2s, pl_dma_dev_input.length_s2mm);
+//			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
+//			printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
 
 			resource_size_t offset = axi_dma_interface->pl_dma_dev.base_addr;
 			unsigned long size = axi_dma_interface->pl_dma_dev.high_addr - axi_dma_interface->pl_dma_dev.base_addr + 1;
 			axi_dma_interface->pl_dma_dev.addr = ioremap_nocache(offset, size);
 
 
-
-
 			break;
 		case PL_AXI_DMA_PREP_BUF:
 			printk(KERN_INFO "<%s> ioctl: XDMA_PREP_BUF\n", DEVICE_NAME);
 
-		   	uint8_t *virt = ioremap_nocache((phys_addr_t) SOURCE_MEM_ADDRESS, axi_dma_interface->pl_dma_dev.length);
+		   	uint8_t *virt = ioremap_nocache((phys_addr_t) SOURCE_MEM_ADDRESS, 640*480);
 
-			if (copy_from_user((void *)virt, (const void __user *)arg, axi_dma_interface->pl_dma_dev.length)){
+			if (copy_from_user((void *)virt, (const void __user *)arg, 640*480)){
 				return -EFAULT;
 			}
 			
@@ -246,14 +241,12 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
 	pl_dma_reset(axi_dma_interface->pl_dma_dev.addr);
 	pl_dma_halt(axi_dma_interface->pl_dma_dev.addr);
 
-	pl_dma_set_addresses(axi_dma_interface->pl_dma_dev.addr, SOURCE_MEM_ADDRESS, DEST_MEM_ADDRESS);
+	pl_dma_set_addresses(axi_dma_interface->pl_dma_dev.addr, axi_dma_interface->pl_dma_dev.addr_mm2s, axi_dma_interface->pl_dma_dev.addr_s2mm);
 
 	pl_dma_start_channel(axi_dma_interface->pl_dma_dev.addr);
 
-	pl_dma_set_length(axi_dma_interface->pl_dma_dev.addr, axi_dma_interface->pl_dma_dev.length);
-
-//	pl_dma_sync_mm2s(axi_dma_interface->pl_dma_dev.addr);
-//	pl_dma_sync_s2mm(axi_dma_interface->pl_dma_dev.addr);
+	pl_dma_set_length_mm2s(axi_dma_interface->pl_dma_dev.addr, axi_dma_interface->pl_dma_dev.length_mm2s);
+	pl_dma_set_length_s2mm(axi_dma_interface->pl_dma_dev.addr, axi_dma_interface->pl_dma_dev.length_s2mm);
 
 	//	setup timer interval to 1000 msecs 
 	mod_timer(&pl_axi_dma_timer, jiffies + msecs_to_jiffies(1000));
@@ -277,7 +270,7 @@ ssize_t axi_dma_interface_read(struct file *filp, char __user *buf, size_t count
     // copy to user  
 	
 
-    retval = copy_to_user_frame_buffer(buf, DEST_MEM_ADDRESS, axi_dma_interface->pl_dma_dev.length);
+    retval = copy_to_user_frame_buffer(buf, axi_dma_interface->pl_dma_dev.addr_s2mm, axi_dma_interface->pl_dma_dev.length_s2mm);
     if (retval) {
         printk(DEVICE_NAME " :axi_dma_interface_read: Fail copy to user\n");
         goto fail;
@@ -287,6 +280,26 @@ fail:
     up(&axi_dma_interface->sem);
     return retval;
 
+}
+
+
+static void axi_dma_interface_copy_structure( pl_dma_dev_t* out, pl_dma_dev_t* in){
+
+
+	out->addr = in->addr;
+
+	out->base_addr = in->base_addr;
+	out->high_addr = in->high_addr;
+
+	out->int_s2mm = in->int_s2mm;
+	out->int_mm2s = in->int_mm2s;
+
+	out->length_s2mm = in->length_s2mm;
+	out->length_mm2s = in->length_mm2s;
+
+	out->addr_s2mm = in->addr_s2mm;	
+	out->addr_mm2s = in->addr_mm2s;
+	
 }
 
 
@@ -306,17 +319,15 @@ ssize_t axi_dma_interface_write(struct file *filp, const char __user *buf, size_
         goto fail;
     }
 
-
-	axi_dma_interface->pl_dma_dev.length = pl_dma_dev_input.length;
-	axi_dma_interface->pl_dma_dev.base_addr = pl_dma_dev_input.base_addr;
-	axi_dma_interface->pl_dma_dev.high_addr = pl_dma_dev_input.high_addr;
-	
+	axi_dma_interface_copy_structure(&axi_dma_interface->pl_dma_dev, &pl_dma_dev_input);	
 	axi_dma_interface_dev_end(axi_dma_interface);
 
-	printk(KERN_INFO DEVICE_NAME "  f_pos: %u\n", f_pos);
-	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change length: %u\n", pl_dma_dev_input.length);
-	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
-	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
+
+	pl_dma_print_desc(pl_dma_dev_input);
+	
+//	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change length: %08x %08x\n", pl_dma_dev_input.length_mm2s, pl_dma_dev_input.length_s2mm);
+//	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change base addr %08x\n", pl_dma_dev_input.base_addr);
+//	printk(KERN_INFO DEVICE_NAME "  axi_dma_interface_write change high addr: %08x\n", pl_dma_dev_input.high_addr);
 
 	resource_size_t offset = axi_dma_interface->pl_dma_dev.base_addr;
 	unsigned long size = axi_dma_interface->pl_dma_dev.high_addr - axi_dma_interface->pl_dma_dev.base_addr + 1;
@@ -339,11 +350,10 @@ static void axi_dma_interface_dev_init(axi_dma_interface_dev_t* driver_dev) {
     sema_init(&driver_dev->sem, 1);
 
 
-	driver_dev->pl_dma_dev = pl_dma_init(DATA_TRANSFER_LENGTH, 
-											XPAR_AXI_DMA_0_BASEADDR, 
-											XPAR_AXI_DMA_0_HIGHADDR, 
-											XPAR_FABRIC_AXI_DMA_0_S2MM_INTROUT_INTR, 
-											XPAR_FABRIC_AXI_DMA_0_MM2S_INTROUT_INTR
+	driver_dev->pl_dma_dev = pl_dma_init(DATA_TRANSFER_LENGTH, DATA_TRANSFER_LENGTH, 
+											DEST_MEM_ADDRESS, SOURCE_MEM_ADDRESS,
+											XPAR_AXI_DMA_0_BASEADDR, XPAR_AXI_DMA_0_HIGHADDR, 
+											XPAR_FABRIC_AXI_DMA_0_S2MM_INTROUT_INTR, XPAR_FABRIC_AXI_DMA_0_MM2S_INTROUT_INTR
 										);
 
 	// Map the physical address of the module to virtual space :)
