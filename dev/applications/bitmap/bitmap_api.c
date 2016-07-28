@@ -1,4 +1,7 @@
+#include "../includes/pl_io_define.h"
+
 #include "bitmap_api.h"
+
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -69,7 +72,7 @@ void bitmap_api_save(uint8_t* rgb_img, const char* filename, uint32_t height, ui
 
 	FILE *fp = fopen(filename,"wb");
 	if(fp == NULL){
-		printf("Bitmap_api_save: fp is NULL.. \n");		
+		PRINT_CUSTOM("Bitmap_api_save: fp is NULL.. \n");		
 	}
 
     fwrite (pbitmap, 1, sizeof(bitmap),fp);
@@ -90,12 +93,12 @@ void bitmap_api_save(uint8_t* rgb_img, const char* filename, uint32_t height, ui
 void bitmap_api_transform_8_to_24(uint8_t* buffer_24, uint8_t* buffer_8, uint32_t size_buffer_8){
 
 	if(buffer_8 == NULL){
-		printf("Bitmap_api_transform_8_to_24: buufer_8 is NULL..\n");	
+		PRINT_CUSTOM("Bitmap_api_transform_8_to_24: buufer_8 is NULL..\n");	
 		return;
 	}
 		
 	if(buffer_24 == NULL){
-		printf("Bitmap_api_transform_8_to_24: buffer_24 is NULL..\n");	
+		PRINT_CUSTOM("Bitmap_api_transform_8_to_24: buffer_24 is NULL..\n");	
 		return;
 	}
 	

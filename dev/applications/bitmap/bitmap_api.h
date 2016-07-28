@@ -1,32 +1,7 @@
 #ifndef __BITMAP_API_H
 #define __BITMAP_APT_H
 
-
-#if defined(__KERNEL__) || defined(MODULE)
-
-	#include <linux/module.h>
-	#include <linux/kernel.h>
-	#include <linux/types.h>		
-	#include <asm/io.h>
-	
-	#define io_write32_c(dest, src)   iowrite32(dest, src)  
-	#define io_read32_c(src)          ioread32(src)  
-	
-	#define PRINT_CUSTOM(format,arg...) printk(KERNEL_INFO format,##arg)
-
-#else
-	#include <stdio.h>
-	#include <stdint.h>
-	
-	#define CUSTOM_CAST(type, ptr)       ((type) (ptr))
-
-	#define io_write32_c(dest, src)     (*CUSTOM_CAST(volatile uint32_t *, (dest)) = (src))
-	#define io_read32_c(src)            (*CUSTOM_CAST(volatile uint32_t *, (src)))
-
-	#define PRINT_CUSTOM(format,arg...) printf(format,##arg)
-
-#endif
-
+#include "../includes/pl_io_define.h"
 
 
 #define _height 600
