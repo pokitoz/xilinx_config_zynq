@@ -1,6 +1,7 @@
 #include "../includes/pl_io_define.h"
 #include "pl_dma_api.h"
 
+#define API_NAME "pl_dma_api:"
 
 // Set and modify value in the register of the DMA depedning on the offset of the register
 void pl_dma_set_reg(unsigned int* dma_address, int offset, unsigned int value) {
@@ -20,19 +21,19 @@ unsigned int pl_dma_get_reg(unsigned int* dma_address, int offset) {
 
 void pl_dma_print_desc(pl_dma_dev_t dma_dev){
 
-	PRINT_CUSTOM("\ndma_dev: ");
-	PRINT_CUSTOM("dma_dev.addr\t 0x%08x \n", (unsigned int) dma_dev.addr);
-	PRINT_CUSTOM("dma_dev.addr_mm2s\t 0x%08x \n", dma_dev.addr_mm2s);
-	PRINT_CUSTOM("dma_dev.addr_s2mm\t 0x%08x \n", dma_dev.addr_s2mm);
+	PRINT_CUSTOM(" \n%s dma_dev: ", API_NAME);
+	PRINT_CUSTOM(API_NAME " dma_dev.addr\t 0x%08x \n", (unsigned int) dma_dev.addr);
+	PRINT_CUSTOM(API_NAME " dma_dev.addr_mm2s\t 0x%08x \n", dma_dev.addr_mm2s);
+	PRINT_CUSTOM(API_NAME " dma_dev.addr_s2mm\t 0x%08x \n", dma_dev.addr_s2mm);
 
-	PRINT_CUSTOM("dma_dev.length_mm2s\t 0x%08x \n", dma_dev.length_mm2s);
-	PRINT_CUSTOM("dma_dev.length_s2mm\t 0x%08x \n", dma_dev.length_s2mm);
+	PRINT_CUSTOM(API_NAME " dma_dev.length_mm2s\t 0x%08x \n", dma_dev.length_mm2s);
+	PRINT_CUSTOM(API_NAME " dma_dev.length_s2mm\t 0x%08x \n", dma_dev.length_s2mm);
 
-	PRINT_CUSTOM("dma_dev.high_addr\t 0x%08x \n", (unsigned int) dma_dev.high_addr);
-	PRINT_CUSTOM("dma_dev.base_addr\t 0x%08x \n", (unsigned int) dma_dev.base_addr);
+	PRINT_CUSTOM(API_NAME " dma_dev.high_addr\t 0x%08x \n", (unsigned int) dma_dev.high_addr);
+	PRINT_CUSTOM(API_NAME " dma_dev.base_addr\t 0x%08x \n", (unsigned int) dma_dev.base_addr);
 
-	PRINT_CUSTOM("dma_dev.int_s2mm\t 0x%08x \n", dma_dev.int_s2mm);
-	PRINT_CUSTOM("dma_dev.int_mm2s\t 0x%08x \n\n", dma_dev.int_mm2s);
+	PRINT_CUSTOM(API_NAME " dma_dev.int_s2mm\t 0x%08x \n", dma_dev.int_s2mm);
+	PRINT_CUSTOM(API_NAME " dma_dev.int_mm2s\t 0x%08x \n\n", dma_dev.int_mm2s);
 
 }
 
@@ -44,6 +45,7 @@ pl_dma_dev_t pl_dma_init(unsigned int length_s2mm, unsigned int length_mm2s,
 						unsigned int int_s2mm, unsigned int int_mm2s){
 
 	pl_dma_dev_t dev;
+
 	dev.length_s2mm = length_s2mm;
 	dev.length_mm2s = length_mm2s;
 
@@ -52,6 +54,7 @@ pl_dma_dev_t pl_dma_init(unsigned int length_s2mm, unsigned int length_mm2s,
 
 	dev.base_addr = base_addr;
 	dev.high_addr = high_addr;
+
 	dev.int_s2mm = int_s2mm;
 	dev.int_mm2s = int_mm2s;
 
@@ -73,7 +76,7 @@ void pl_dma_reset_mm2s(void* dma_address){
 
 
 void pl_dma_reset(void* dma_address){
-	PRINT_CUSTOM(" DMA reset\n");
+	PRINT_CUSTOM(API_NAME " DMA reset\n");
 	pl_dma_reset_s2mm(dma_address);
 	pl_dma_reset_mm2s(dma_address);
 }
@@ -91,7 +94,7 @@ void pl_dma_halt_mm2s(void* dma_address){
 }
 
 void pl_dma_halt(void* dma_address){
-	PRINT_CUSTOM(" DMA halt\n");
+	PRINT_CUSTOM(API_NAME " DMA halt\n");
 	pl_dma_halt_s2mm(dma_address);
 	pl_dma_halt_mm2s(dma_address);
 }
@@ -108,10 +111,10 @@ void pl_dma_set_address_s2mm(void* dma_address, unsigned int dest_addr){
 
 void pl_dma_set_addresses(void* dma_address, unsigned int source_addr, unsigned int dest_addr){
 
-	PRINT_CUSTOM(" DMA Set source address %x\n", source_addr);
+	PRINT_CUSTOM(API_NAME " DMA Set source address %x\n", source_addr);
 	pl_dma_set_reg(dma_address, MM2S_SA_I, source_addr);
 
-	PRINT_CUSTOM(" DMA Set destination address %x\n", dest_addr);
+	PRINT_CUSTOM(API_NAME " DMA Set destination address %x\n", dest_addr);
 	pl_dma_set_reg(dma_address, S2MM_DA_I, dest_addr);
 
 }
@@ -224,7 +227,7 @@ void pl_dma_start_channel_mm2s(void* dma_address){
 
 void pl_dma_start_channel(void* dma_address){
 
-	PRINT_CUSTOM("Starting channel\n");
+	PRINT_CUSTOM(API_NAME " Starting channel\n");
 	pl_dma_start_channel_s2mm(dma_address);
 	pl_dma_start_channel_mm2s(dma_address);
 	
@@ -234,13 +237,13 @@ void pl_dma_start_channel(void* dma_address){
 }
 
 void pl_dma_set_length_mm2s(void* dma_address, unsigned int dma_transfer_length){
-	PRINT_CUSTOM("Writing transfer length %d\n", dma_transfer_length);
+	PRINT_CUSTOM(API_NAME " Writing transfer length %d\n", dma_transfer_length);
 	pl_dma_set_reg(dma_address, MM2S_LENGTH_I, dma_transfer_length);
 	pl_dma_status_mm2s(dma_address);
 }
 
 void pl_dma_set_length_s2mm(void* dma_address, unsigned int dma_transfer_length){
-	PRINT_CUSTOM("Writing transfer length %d\n", dma_transfer_length);
+	PRINT_CUSTOM(API_NAME " Writing transfer length %d\n", dma_transfer_length);
 	pl_dma_set_reg(dma_address, S2MM_LENGTH_I, dma_transfer_length);
 	pl_dma_status_s2mm(dma_address);
 }
@@ -254,13 +257,13 @@ void pl_dma_set_length(void* dma_address, unsigned int dma_transfer_length){
 
 void pl_dma_status_s2mm(unsigned int* dma_address) {
 	unsigned int status = pl_dma_get_reg(dma_address, S2MM_DMASR_I);
-	PRINT_CUSTOM(" S2MM status reg :: 0x%08x :: 0x%02x", status, S2MM_DMASR);
+	PRINT_CUSTOM(API_NAME " S2MM status reg :: 0x%08x :: 0x%02x", status, S2MM_DMASR);
 	pl_dma_print_status(status);
 }
 
 void pl_dma_status_mm2s(unsigned int* dma_address) {
 	unsigned int status = pl_dma_get_reg(dma_address, MM2S_DMASR_I);
-	PRINT_CUSTOM(" MM2S status reg :: 0x%08x :: 0x%02x", status, MM2S_DMASR);
+	PRINT_CUSTOM(API_NAME " MM2S status reg :: 0x%08x :: 0x%02x", status, MM2S_DMASR);
 	pl_dma_print_status(status);
 }
 
