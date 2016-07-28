@@ -17,11 +17,16 @@
 
 #include "../bitmap/bitmap_api.h"
 #include "../dma/pl_dma_api_structure.h" 
-#include "./includes/xparameters.h"
+#include "../dma/pl_dma_api.h"
+#include "../includes/xparameters.h"
 #include "../dma/driver/pl_axi_dma_define.h"
 
 #define PL_DMA_DRIVER_NAME "/dev/pl_axi_dma_driver"
-#define DATA_TRANSFER_LENGTH (640*480)
+
+#define IMAGE_COL 640
+#define IMAGE_ROW 480
+#define IMAGE_SOURCE_RESOLUTION (IMAGE_COL*IMAGE_ROW)
+#define IMAGE_BYTES_PER_PIXEL 4
 
 #define DEMO_SOBEL_PRINT_NUMBER_BYTE_PER_LINE 16
 int open_driver(const char* driver_name);
@@ -100,15 +105,15 @@ void print_buffer(void* buffer_address, int size) {
 
 int main(void) {
 
-	uint8_t* buffer = (uint8_t*) malloc(DATA_TRANSFER_LENGTH*sizeof(uint8_t));
+	uint8_t* buffer = (uint8_t*) malloc(IMAGE_SOURCE_RESOLUTION*sizeof(uint8_t));
 
 	const char* y_raw_data_filename = "./yframe420p.y";
 	FILE *f = NULL;
 	f = fopen(y_raw_data_filename, "rb");
 	if (f != NULL){
 		int n;
-		n = fread(buffer, DATA_TRANSFER_LENGTH, 1, f);
-		printf("   Read %d bytes expected %u\n", n, DATA_TRANSFER_LENGTH);
+		n = fread(buffer, IMAGE_SOURCE_RESOLUTION, 1, f);
+		printf("   Read %d bytes expected %u\n", n, IMAGE_SOURCE_RESOLUTION);
 	}
 	else{
 		printf("ERROR: could not open the file... Abort\n");
@@ -117,8 +122,8 @@ int main(void) {
 
 	fclose(f);
 
-	uint8_t* buffer_24 = (uint8_t*) malloc(3*DATA_TRANSFER_LENGTH*sizeof(uint8_t));
-	bitmap_api_transform_8_to_24(buffer_24, buffer, DATA_TRANSFER_LENGTH);
+	uint8_t* buffer_24 = (uint8_t*) malloc(3*IMAGE_SOURCE_RESOLUTION*sizeof(uint8_t));
+	bitmap_api_transform_8_to_24(buffer_24, buffer, IMAGE_SOURCE_RESOLUTION);
 	bitmap_api_save(buffer_24, "input_sobel_24.bmp", 480, 640, 24);
 
 
@@ -135,13 +140,15 @@ int main(void) {
 			exit(EXIT_FAILURE);
 	}
 
-	printf("Before PL_AXI_DMA_DEVICE_CONTROL\n");
-	printf(" length: %u\n", dev.length);
-	printf(" base addr %08x\n", dev.base_addr);
-	printf(" high addr: %08x\n", dev.high_addr);
-	printf("\n");
+	printf("app: Before PL_AXI_DMA_DEVICE_CONTROL\n");
+	pl_dma_print_desc(dev);
 
-	dev.length = DATA_TRANSFER_LENGTH;
+	dev.length_mm2s = IMAGE_SOURCE_RESOLUTION*IMAGE_BYTES_PER_PIXEL;
+	dev.length_s2mm = IMAGE_SOURCE_RESOLUTION*IMAGE_BYTES_PER_PIXEL;
+
+	dev.addr_s2mm = DEST_MEM_ADDRESS;
+	dev.addr_mm2s = SOURCE_MEM_ADDRESS;
+
 	dev.base_addr = XPAR_AXI_DMA_0_BASEADDR;
 	dev.high_addr = XPAR_AXI_DMA_0_HIGHADDR;
 	dev.int_s2mm = XPAR_FABRIC_AXI_DMA_0_S2MM_INTROUT_INTR;
@@ -149,33 +156,25 @@ int main(void) {
 	//configure_driver(PL_DMA_DRIVER_NAME, fd_dma, dev);
 
 	if (ioctl(fd_dma, PL_AXI_DMA_DEVICE_CONTROL, &dev) < 0) {
-		perror("Error ioctl getting device info");
+		perror("Error ioctl getting device info 1");
 		exit(EXIT_FAILURE);
 	}
+
 	printf("After PL_AXI_DMA_DEVICE_CONTROL\n");
-	printf(" length: %u\n", dev.length);
-	printf(" base addr %08x\n", dev.base_addr);
-	printf(" high addr: %08x\n", dev.high_addr);
-	printf("\n");
+	pl_dma_print_desc(dev);
+
 
 	
 	if (ioctl(fd_dma, PL_AXI_DMA_PREP_BUF, buffer) < 0) {
-		perror("Error ioctl getting device info");
+		perror("Error ioctl getting device info 2");
 		exit(EXIT_FAILURE);
 	}
 
-	read_driver(PL_DMA_DRIVER_NAME, fd_dma, buffer, DATA_TRANSFER_LENGTH);
-
-	
-
-
+	read_driver(PL_DMA_DRIVER_NAME, fd_dma, buffer, IMAGE_SOURCE_RESOLUTION);
 
 	close_driver(PL_DMA_DRIVER_NAME, fd_dma);
-
 	
-
-
-	bitmap_api_transform_8_to_24(buffer_24, buffer, DATA_TRANSFER_LENGTH);
+	bitmap_api_transform_8_to_24(buffer_24, buffer, IMAGE_SOURCE_RESOLUTION);
 	bitmap_api_save(buffer_24, "output_sobel_24.bmp", 480, 640, 24);
 
 	free(buffer);
