@@ -21,18 +21,19 @@ abort() {
 
 trap 'abort' 0
 
-echo -e "$c_good *** START `basename "$0"` *** $c_default"
+echogood -e "$c_good *** START `basename "$0"` *** $c_default"
+
+mkdir -p "includes"
+cp -f "$dev_dir_r/fsbl_$1/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/xparameters.h ./includes/
+cp -f "$dev_dir_r/fsbl_$1/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/xparameters_ps.h ./includes/
+cp -f "$preset_dir_r/pl_io_define.h" ./includes/
 
 pushd $applications_dir_r
 	for d in * ; do
 
 	    if [ -d "$d" ]; then
+			
 			pushd "$d/"
-
-				mkdir -p "includes"
-				cp -f "$dev_dir_r/fsbl_$1/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/xparameters.h ./includes/
-				cp -f "$dev_dir_r/fsbl_$1/app/zynq_fsbl_bsp/ps7_cortexa9_0/include"/xparameters_ps.h ./includes/
-
 
 				if [ -f "make_$d.sh" ]; then
 					echo -e "$c_info Changing chmod of the script $d $c_default"
